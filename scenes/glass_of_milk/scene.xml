@@ -1,0 +1,91 @@
+<scene version="0.6.0">
+    <default name="spp" value="128"/>
+    <default name="width" value="600"/>
+    <default name="height" value="400"/>
+
+    <sensor type="perspective">
+        <float name="nearClip" value="0.1"/>
+        <float name="farClip" value="1000"/>
+        <string name="focalLength" value="50mm"/>
+
+        <transform name="toWorld">
+            <lookAt origin="0 7.2 1.0495" target="0 -1 1.0495" up="0 0 1"/>
+        </transform>
+
+        <sampler type="independent">
+            <integer name="sampleCount" value="$spp"/>
+        </sampler>
+
+        <film type="hdrfilm">
+            <integer name="width" value="$width"/>
+            <integer name="height" value="$height"/>
+            <boolean name="banner" value="false"/>
+            <rfilter type="box"/>
+        </film>
+    </sensor>
+
+    <medium type="homogeneous" id="milk">
+        <string name="material" value="Regular Milk"/>
+    </medium>
+
+    <emitter type="envmap">
+        <string name="filename" value="textures/envmap.exr"/>
+        <float name="scale" value="3"/>
+
+        <transform name="toWorld">
+            <rotate x="1" y="0" z="0" angle="90"/>
+            <rotate x="0" y="0" z="1" angle="90"/>
+        </transform>
+    </emitter>
+
+    <shape type="obj">
+        <string name="filename" value="meshes/glass.obj"/>
+
+        <bsdf type="roughdielectric">
+            <float name="alpha" value="0.05"/>
+            <float name="intIOR" value="1.5"/>
+            <float name="extIOR" value="1.0"/>
+        </bsdf>
+    </shape>
+
+    <shape type="obj">
+        <string name="filename" value="meshes/milk_top.obj"/>
+
+        <bsdf type="roughdielectric">
+            <float name="alpha" value="0.005"/>
+            <float name="intIOR" value="1.33"/>
+            <float name="extIOR" value="1.0"/>
+        </bsdf>
+
+        <ref name="interior" id="milk"/>
+    </shape>
+
+    <shape type="obj">
+        <string name="filename" value="meshes/milk_side.obj"/>
+
+        <bsdf type="roughdielectric">
+            <float name="alpha" value="0.005"/>
+            <float name="intIOR" value="1.33"/>
+            <float name="extIOR" value="1.5"/>
+        </bsdf>
+
+        <ref name="interior" id="milk"/>
+    </shape>
+
+    <shape type="obj">
+        <string name="filename" value="meshes/table_top.obj"/>
+
+        <bsdf type="blendbsdf">
+            <float name="weight" value="0.3"/>
+
+            <bsdf name="bsdf_0" type="diffuse">
+                <rgb name="reflectance" value="0.05 0 0"/>
+            </bsdf>
+
+            <bsdf name="bsdf_1" type="roughconductor">
+                <float name="alpha" value="0.2"/>
+                <string name="material" value="Al"/>
+            </bsdf>
+        </bsdf>
+    </shape>
+</scene>

@@ -1,0 +1,9 @@
+<scene version="0.6.0">
+    <default name="spp" value="256"/>
+    <default name="width" value="600"/>
+    <default name="heigth" value="400"/>
+
+    <integrator type="volpath"/>
+
+    <include filename="scene.xml"/>
+</scene>

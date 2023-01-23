@@ -1,0 +1,8 @@
+<scene version="0.6.0">
+    <default name="spp" value="256"/>
+    <default name="res" value="512"/>
+
+    <integrator type="bdpt"/>
+
+    <include filename="scene.xml"/>
+</scene>

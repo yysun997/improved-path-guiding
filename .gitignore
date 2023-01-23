@@ -1,2 +1,6 @@
 # CLion
 .idea
+
+# Rendered images
+scenes/**/*.exr
+scenes/**/*.png
