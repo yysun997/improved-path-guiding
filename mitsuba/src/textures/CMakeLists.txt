@@ -1,0 +1,7 @@
+add_mts_plugin(bitmap bitmap.cpp)
+add_mts_plugin(scale scale.cpp)
+add_mts_plugin(gridtexture gridtexture.cpp)
+add_mts_plugin(checkerboard checkerboard.cpp)
+add_mts_plugin(vertexcolors vertexcolors.cpp)
+add_mts_plugin(wireframe wireframe.cpp)
+add_mts_plugin(curvature curvature.cpp)

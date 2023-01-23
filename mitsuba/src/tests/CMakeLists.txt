@@ -1,0 +1,13 @@
+add_compile_definitions(MTS_TESTCASE=1)
+
+add_mts_plugin(test_chisquare test_chisquare.cpp)
+add_mts_plugin(test_dgeom test_dgeom.cpp)
+add_mts_plugin(test_kd test_kd.cpp)
+add_mts_plugin(test_la test_la.cpp)
+add_mts_plugin(test_microfacet test_microfacet.cpp)
+add_mts_plugin(test_quad test_quad.cpp)
+add_mts_plugin(test_random test_random.cpp)
+add_mts_plugin(test_rtrans test_rtrans.cpp)
+add_mts_plugin(test_samplers test_samplers.cpp)
+add_mts_plugin(test_sh. test_sh.cpp)
+add_mts_plugin(test_spectrum test_spectrum.cpp)
