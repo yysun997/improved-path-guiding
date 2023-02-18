@@ -1,0 +1,2137 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.6.0">
+	<default name="spp" value="64"/>
+	<default name="width" value="1024"/>
+	<default name="height" value="768"/>
+
+	<sensor type="perspective">
+		<float name="farClip" value="2000"/>
+		<float name="fov" value="45"/>
+		<string name="fovAxis" value="x"/>
+		<float name="nearClip" value="10"/>
+
+		<transform name="toWorld">
+			<scale x="-1"/>
+			<lookat origin="266.109, 496.88, 148.073" up="-0.0884491, 0.192773, 0.977249" target="265.702, 497.768, 147.861"/>
+		</transform>
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="$spp"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<boolean name="attachLog" value="false"/>
+			<boolean name="banner" value="false"/>
+			<integer name="height" value="$height"/>
+			<integer name="width" value="$width"/>
+
+			<rfilter type="box"/>
+		</film>
+	</sensor>
+
+	<texture type="bitmap" id="Texture0_000000000010B810">
+		<string name="filename" value="textures/plaster.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010CAE0">
+		<string name="filename" value="textures/archinteriors_vol6_003_floor.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010CC90">
+		<string name="filename" value="textures/wood1.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010CE40">
+		<string name="filename" value="textures/gravel.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010CFF0">
+		<string name="filename" value="textures/fabric.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010D1D0">
+		<string name="filename" value="textures/wood1.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010D380">
+		<string name="filename" value="textures/pic1.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010D890">
+		<string name="filename" value="textures/pic2.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010DB60">
+		<string name="filename" value="textures/pic3.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010DE30">
+		<string name="filename" value="textures/pic4.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010DFE0">
+		<string name="filename" value="textures/plaster.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000010EA90">
+		<string name="filename" value="textures/archinteriors_vol6_003_wood1.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_0000000000186710">
+		<string name="filename" value="textures/archinteriors_vol6_003_wood2.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000018B190">
+		<string name="filename" value="textures/archinteriors_vol6_003_leaf.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000018BCD0">
+		<string name="filename" value="textures/Arch31_062_flower_yellow.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_000000000018FBD0">
+		<string name="filename" value="textures/archinteriors_vol6_003_wood3.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_0000000000190050">
+		<string name="filename" value="textures/archinteriors_vol6_003_wood1.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_00000000001903B0">
+		<string name="filename" value="textures/Arch33_025_fabric_color.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<texture type="bitmap" id="Texture0_0000000000190440">
+		<string name="filename" value="textures/Arch33_025_fabric_reflect.jpg"/>
+		<float name="gamma" value="1"/>
+	</texture>
+
+	<bsdf type="diffuse" id="plaster-gray">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010B810"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="phong" id="floor">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.572549"/>
+
+			<ref id="Texture0_000000000010CAE0"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.392157, 0.392157, 0.392157"/>
+		<float name="exponent" value="58.9553"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wood-vertical">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010CC90"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="gr">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010CE40"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="fabric">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.788235"/>
+
+			<ref id="Texture0_000000000010CFF0"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wood-hor">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010D1D0"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="pic1">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010D380"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="frame">
+		<rgb name="reflectance" value="0.329412, 0.27451, 0.176471"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="passp">
+		<rgb name="reflectance" value="0.882353, 0.866667, 0.807843"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="pic2">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010D890"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="pic3">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010DB60"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="pic4">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010DE30"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="diffuse" id="plaster">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.981699"/>
+
+			<ref id="Texture0_000000000010DFE0"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="phong" id="LampShade">
+		<rgb name="diffuseReflectance" value="0.01, 0.01, 0.01"/>
+		<rgb name="specularReflectance" value="0.603922, 0.639216, 0.372549"/>
+		<float name="exponent" value="10.8702"/>
+	</bsdf>
+
+	<bsdf type="phong" id="simple_metal_0_8">
+		<rgb name="diffuseReflectance" value="0.01, 0.01, 0.01"/>
+		<rgb name="specularReflectance" value="0.14902, 0.0862745, 0.0627451"/>
+		<float name="exponent" value="615.486"/>
+	</bsdf>
+
+	<bsdf type="phong" id="wood">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000010EA90"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.360784, 0.360784, 0.360784"/>
+		<float name="exponent" value="22.6827"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="curtains">
+		<rgb name="reflectance" value="0.760784, 0.658824, 0.439216"/>
+	</bsdf>
+
+	<bsdf type="phong" id="Material #175">
+		<rgb name="diffuseReflectance" value="0.0666667, 0.0666667, 0.0666667"/>
+		<rgb name="specularReflectance" value="0.501961, 0.490196, 0.431373"/>
+		<float name="exponent" value="42.6829"/>
+	</bsdf>
+
+	<bsdf type="phong" id="windows">
+		<rgb name="diffuseReflectance" value="0.992157, 0.992157, 0.992157"/>
+		<rgb name="specularReflectance" value="0.0980392, 0.0980392, 0.0980392"/>
+		<float name="exponent" value="42.6828"/>
+	</bsdf>
+
+	<bsdf type="dielectric" id="pane">
+		<boolean name="usePathGuiding" value="false"/>
+		<float name="intIOR" value="1.517"/>
+		<float name="extIOR" value="1"/>
+	</bsdf>
+
+	<bsdf type="phong" id="wood2">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.564706"/>
+
+			<ref id="Texture0_0000000000186710"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.105882, 0.105882, 0.105882"/>
+		<float name="exponent" value="518.095"/>
+	</bsdf>
+
+	<bsdf type="phong" id="leather">
+		<rgb name="diffuseReflectance" value="0.721569, 0.654902, 0.580392"/>
+		<rgb name="specularReflectance" value="0.196078, 0.196078, 0.196078"/>
+		<float name="exponent" value="25.1869"/>
+	</bsdf>
+
+	<bsdf type="conductor" id="Mirror">
+		<boolean name="usePathGuiding" value="false"/>
+		<rgb name="specularReflectance" value="1, 1, 1"/>
+		<string name="material" value="Ag"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="CGUdS_Material_0001">
+		<rgb name="reflectance" value="0.898039, 0.65098, 0.843137"/>
+	</bsdf>
+
+	<bsdf type="mixturebsdf" id="ceiling_list">
+		<boolean name="ensureEnergyConservation" value="false"/>
+		<string name="weights" value="1, 1"/>
+
+		<bsdf type="conductor" id="ceiling_list_mirror">
+			<boolean name="usePathGuiding" value="false"/>
+			<rgb name="specularReflectance" value="0.0784314, 0.0784314, 0.0784314"/>
+			<string name="material" value="Ag"/>
+		</bsdf>
+
+		<bsdf type="diffuse" id="ceiling_list_diffuse">
+			<rgb name="reflectance" value="0.992157, 0.992157, 0.992157"/>
+		</bsdf>
+	</bsdf>
+
+	<bsdf type="phong" id="VaseOrnaments">
+		<rgb name="diffuseReflectance" value="0.301961, 0.0705882, 0.0705882"/>
+		<rgb name="specularReflectance" value="0.301961, 0.301961, 0.301961"/>
+		<float name="exponent" value="38.3782"/>
+	</bsdf>
+
+	<bsdf type="dielectric" id="VaseGlass">
+		<boolean name="usePathGuiding" value="false"/>
+		<float name="intIOR" value="1.6"/>
+		<float name="extIOR" value="1"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="Material #4882">
+		<rgb name="reflectance" value="0.607843, 0.839216, 0.737255"/>
+	</bsdf>
+
+	<bsdf type="phong" id="flower-pot">
+		<rgb name="diffuseReflectance" value="0.909804, 0.694118, 0.501961"/>
+		<rgb name="specularReflectance" value="0.592157, 0.592157, 0.592157"/>
+		<float name="exponent" value="325.189"/>
+	</bsdf>
+
+	<bsdf type="phong" id="plant_mat_02">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000018B190"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.0784314, 0.0784314, 0.0784314"/>
+		<float name="exponent" value="25.1869"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="plant_mat_03">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_000000000018BCD0"/>
+		</texture>
+	</bsdf>
+
+	<bsdf type="phong" id="chess_black">
+		<rgb name="diffuseReflectance" value="0.01, 0.01, 0.01"/>
+		<rgb name="specularReflectance" value="0.176471, 0.176471, 0.176471"/>
+		<float name="exponent" value="245.779"/>
+	</bsdf>
+
+	<bsdf type="phong" id="wood3">
+		<rgb name="diffuseReflectance" value="1, 1, 1"/>
+		<rgb name="specularReflectance" value="0.0980392, 0.0980392, 0.0980392"/>
+		<float name="exponent" value="245.779"/>
+	</bsdf>
+
+	<bsdf type="phong" id="2">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.23268"/>
+
+			<ref id="Texture0_000000000018FBD0"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.0980392, 0.0980392, 0.0980392"/>
+		<float name="exponent" value="245.779"/>
+	</bsdf>
+
+	<bsdf type="phong" id="gold3">
+		<rgb name="diffuseReflectance" value="0.01, 0.01, 0.01"/>
+		<rgb name="specularReflectance" value="0.768628, 0.658824, 0.415686"/>
+		<float name="exponent" value="130.489"/>
+	</bsdf>
+
+	<bsdf type="phong" id="wood4">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.5"/>
+
+			<ref id="Texture0_0000000000190050"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.137255, 0.137255, 0.137255"/>
+		<float name="exponent" value="52.8961"/>
+	</bsdf>
+
+	<bsdf type="phong" id="chair_fabric">
+		<texture name="diffuseReflectance" type="scale">
+			<float name="scale" value="0.717647"/>
+
+			<ref id="Texture0_00000000001903B0"/>
+		</texture>
+		<rgb name="specularReflectance" value="0.027451, 0.027451, 0.027451"/>
+		<float name="exponent" value="5.68976"/>
+	</bsdf>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Color015.03_0.obj"/>
+
+		<ref id="plaster-gray"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Color252.02_1.obj"/>
+
+		<ref id="floor"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/windows_2.obj"/>
+
+		<ref id="wood-vertical"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/mosaic_3.obj"/>
+
+		<ref id="gr"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Line03_4.obj"/>
+
+		<ref id="fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/plynth_5.obj"/>
+
+		<ref id="wood-hor"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/picture1_6.obj"/>
+
+		<ref id="pic1"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box05_0001_frame_7.obj"/>
+
+		<ref id="frame"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box05_0002_passp_8.obj"/>
+
+		<ref id="passp"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box36_0001_frame_9.obj"/>
+
+		<ref id="frame"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box36_0002_passp_10.obj"/>
+
+		<ref id="passp"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/picture02_11.obj"/>
+
+		<ref id="pic2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box37_0001_frame_12.obj"/>
+
+		<ref id="frame"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box37_0002_passp_13.obj"/>
+
+		<ref id="passp"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/picture03_14.obj"/>
+
+		<ref id="pic3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box38_0001_frame_15.obj"/>
+
+		<ref id="frame"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box38_0002_passp_16.obj"/>
+
+		<ref id="passp"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/picture04_17.obj"/>
+
+		<ref id="pic4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Box06_18.obj"/>
+
+		<ref id="plaster"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Light1_19.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="90.1, 90.1, 90.1"/>
+			<float name="exponent" value="23.1"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Light2_20.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="90.1, 90.1, 90.1"/>
+			<float name="exponent" value="23.1"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Light3_21.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="90.1, 90.1, 90.1"/>
+			<float name="exponent" value="23.1"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Light4_22.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="90.1, 90.1, 90.1"/>
+			<float name="exponent" value="23.1"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/LightCenter_23.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="100, 100, 70"/>
+			<float name="exponent" value="5"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/MirrorLightRight_25.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="125000, 125000, 62500"/>
+			<float name="exponent" value="30"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Line031_26.obj"/>
+
+		<ref id="LampShade"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/LightConnectorRight_27.obj"/>
+
+		<ref id="simple_metal_0_8"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/MirrorLightLeft001_28.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<emitter type="area">
+			<rgb name="radiance" value="1100, 1100, 330"/>
+			<float name="exponent" value="90"/>
+		</emitter>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/LightConnectorLeft001_29.obj"/>
+
+		<ref id="simple_metal_0_8"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Line033_30.obj"/>
+
+		<ref id="LampShade"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/LampStand_31.obj"/>
+
+		<ref id="simple_metal_0_8"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_037_obj_004_32.obj"/>
+
+		<ref id="wood"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_06_33.obj"/>
+
+		<ref id="curtains"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_03_34.obj"/>
+
+		<ref id="curtains"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_01_35.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_125_36.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_126_37.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_127_38.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_128_39.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_129_40.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_130_41.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_131_42.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_132_43.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_133_44.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_134_45.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_135_46.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_136_47.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_137_48.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_138_49.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_139_50.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_140_51.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_141_52.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_142_53.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_143_54.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_144_55.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_145_56.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_146_57.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_147_58.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_148_59.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_149_60.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_150_61.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_151_62.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_152_63.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_153_64.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_154_65.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_155_66.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_156_67.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_157_68.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_158_69.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_159_70.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_160_71.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_161_72.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_162_73.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_163_74.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_164_75.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_165_76.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_166_77.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_167_78.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_168_79.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_169_80.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_170_81.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_171_82.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_172_83.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_173_84.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_174_85.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_175_86.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_176_87.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_177_88.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_178_89.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_179_90.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_180_91.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_182_92.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_183_93.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_184_94.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_185_95.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_186_96.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_187_97.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_188_98.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_189_99.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_190_100.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_191_101.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_192_102.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_193_103.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_194_104.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_195_105.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_196_106.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_197_107.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_198_108.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_199_109.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_200_110.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_201_111.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_202_112.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_203_113.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_204_114.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_205_115.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_206_116.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_207_117.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_208_118.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_209_119.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_210_120.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_211_121.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_212_122.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_213_123.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_214_124.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_215_125.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_216_126.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_217_127.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_218_128.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_219_129.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_220_130.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_221_131.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_222_132.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_223_133.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_224_134.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_225_135.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_226_136.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_227_137.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_228_138.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_229_139.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_230_140.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_231_141.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_232_142.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_233_143.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_234_144.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_235_145.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_236_146.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_237_147.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_238_148.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_239_149.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_240_150.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_241_151.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/curtain_rod_obj_242_152.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_38_153.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_40_154.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_42_155.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_43_156.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_44_157.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_45_158.obj"/>
+
+		<ref id="pane"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_46_159.obj"/>
+
+		<ref id="pane"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_47_160.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_48_161.obj"/>
+
+		<ref id="pane"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_49_162.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_50_163.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_51_164.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_52_165.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_53_166.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_54_167.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_55_168.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_56_169.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_57_170.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_58_171.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_59_172.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_60_173.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_61_174.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_62_175.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_63_176.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_64_177.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_65_178.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_66_179.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_67_180.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_68_181.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_69_182.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_70_183.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_71_184.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_72_185.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_73_186.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window_obj_74_187.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/window-still_02_188.obj"/>
+
+		<ref id="windows"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Object006_0001_plaster_189.obj"/>
+
+		<ref id="plaster"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_01_190.obj"/>
+
+		<ref id="wood2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_02_191.obj"/>
+
+		<ref id="wood2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_03_192.obj"/>
+
+		<ref id="wood2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_04_193.obj"/>
+
+		<ref id="wood2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_05_194.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_06_195.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_07_196.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_08_197.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_09_198.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_10_199.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/tabouret_obj_11_200.obj"/>
+
+		<ref id="leather"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Venzel` - _201.obj"/>
+
+		<ref id="Material #175"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Zerkalo_0001_wood_202.obj"/>
+
+		<ref id="wood"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Zerkalo_0002_Mirror_203.obj"/>
+
+		<ref id="Mirror"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/ceiling_list_009_205.obj"/>
+
+		<ref id="ceiling_list"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/ceiling_list_010_206.obj"/>
+
+		<ref id="ceiling_list"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/sub0032_207.obj"/>
+		<boolean name="faceNormals" value="true"/>
+
+		<ref id="VaseOrnaments"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Vase_208.obj"/>
+
+		<ref id="VaseGlass"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/3ddd_ru_209.obj"/>
+
+		<ref id="Material #4882"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/sub0031_210.obj"/>
+
+		<ref id="VaseOrnaments"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/flower-pot01_211.obj"/>
+
+		<ref id="flower-pot"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_132_212.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_133_213.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_134_214.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_135_215.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_136_216.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_137_217.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_138_218.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_139_219.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_140_220.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_141_221.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_142_222.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_143_223.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_144_224.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_145_225.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_146_226.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_147_227.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_148_228.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_149_229.obj"/>
+
+		<ref id="plant_mat_02"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_150_230.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_151_231.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_152_232.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_153_233.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_154_234.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_155_235.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_156_236.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/objArch31_062_obj_157_237.obj"/>
+
+		<ref id="plant_mat_03"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/LampStand001_238.obj"/>
+
+		<ref id="simple_metal_0_8"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_18_239.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_33_240.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_30_241.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_03_242.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_04_243.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_05_244.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_29_245.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_07_246.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_28_247.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_10_248.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_11_249.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_12_250.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_13_251.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_14_252.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_15_253.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_17_254.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_34_255.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_19_256.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_20_257.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_21_258.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_22_259.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_23_260.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_24_261.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_25_262.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_26_263.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_27_264.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_06_0001_chess_black_265.obj"/>
+
+		<ref id="chess_black"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_06_0002_2_266.obj"/>
+
+		<ref id="2"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_02_267.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_31_268.obj"/>
+
+		<ref id="gold3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_32_269.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_01_270.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/table_271.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_08_272.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_16_273.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/chess_obj_09_274.obj"/>
+
+		<ref id="wood3"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Object005_275.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_07_276.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_06_277.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_08_278.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Object007_279.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_04_280.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_05_281.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_026_obj_03_282.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Object004_0001_chair_fabric_283.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_025_obj_000_0001_chair_fabric_284.obj"/>
+
+		<ref id="chair_fabric"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_025_obj_001_285.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="mesh/Arch33_025_obj_002_286.obj"/>
+
+		<ref id="wood4"/>
+	</shape>
+</scene>

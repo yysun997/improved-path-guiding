@@ -23,3 +23,6 @@ add_mts_plugin(bdpt bdpt/bdpt.cpp bdpt/bdpt_wr.cpp bdpt/bdpt_proc.cpp)
 add_mts_plugin(pssmlt pssmlt/pssmlt.cpp pssmlt/pssmlt_sampler.cpp pssmlt/pssmlt_proc.cpp)
 add_mts_plugin(mlt mlt/mlt.cpp mlt/mlt_proc.cpp)
 add_mts_plugin(erpt erpt/erpt.cpp erpt/erpt_proc.cpp)
+
+# Path guiding techniques
+add_mts_plugin(guidedpath guiding/guidedpath.cpp)

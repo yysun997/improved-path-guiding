@@ -1,0 +1,10 @@
+/**/*.mip
+/**/*.exr
+/**/*.png
+
+!/**/*_ref.exr
+!/**/*_ref.png
+!/**/textures/*.exr
+!/**/textures/*.png
+
+/pool

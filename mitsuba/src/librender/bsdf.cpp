@@ -27,9 +27,9 @@ BSDF::BSDF(const Properties &props)
     /* By default, verify whether energy conservation holds
        for the user-specified parameter values. This step
        is completely up to the particular BSDF implementations */
-    m_ensureEnergyConservation = props.getBoolean(
-        "ensureEnergyConservation", true);
+    m_ensureEnergyConservation = props.getBoolean("ensureEnergyConservation", true);
     m_usesRayDifferentials = false;
+    m_usePathGuiding = props.getBoolean("usePathGuiding", true);
 }
 
 BSDF::BSDF(Stream *stream, InstanceManager *manager)

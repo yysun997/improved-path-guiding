@@ -1,0 +1,898 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.6.0">
+	<default name="spp" value="64"/>
+	<default name="width" value="1024"/>
+	<default name="height" value="768"/>
+	<default name="faceNormalsFlag" value="false"/>
+
+	<sensor type="perspective">
+		<float name="farClip" value="100000"/>
+		<float name="focusDistance" value="1403.13"/>
+		<float name="fov" value="50"/>
+		<string name="fovAxis" value="x"/>
+		<float name="nearClip" value="10"/>
+
+		<transform name="toWorld">
+			<lookat target="-1017.51, 1315.84, -1643.31" origin="-1018.23, 1315.89, -1642.62" up="0.0349388, 0.998741, -0.0359899"/>
+		</transform>
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="$spp"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="width" value="$width"/>
+			<integer name="height" value="$height"/>
+			<boolean name="attachLog" value="false"/>
+			<string name="fileFormat" value="openexr"/>
+			<boolean name="banner" value="false"/>
+			<rfilter type="box"/>
+		</film>
+	</sensor>
+
+	<!-- materials -->
+	<bsdf type="diffuse" id="SocleMaterial_material">
+		<rgb name="reflectance" value="0.814795 0.814795 0.814795"/>
+	</bsdf>
+
+	<texture type="bitmap" id="darkoak">
+		<string name="filename" value="textures/darkoak.JPG"/>
+	</texture>
+
+	<bsdf type="diffuse" id="mat_dvirka">
+		<ref name="reflectance" id="darkoak"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_177026088_material">
+		<rgb name="reflectance" value="0.439632 0.010336 0.0975885"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_027177148_material">
+		<rgb name="reflectance" value="0.010963 0.439632 0.296147"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_154215229_material">
+		<rgb name="reflectance" value="0.323118 0.679475 0.78346"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_138008110_material">
+		<rgb name="reflectance" value="0.254176 0.00243034 0.155948"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_198224087_material">
+		<rgb name="reflectance" value="0.564759 0.745344 0.095321"/>
+	</bsdf>
+
+	<bsdf type="phong" id="mat_plate">
+		<rgb name="diffuseReflectance" value="0.7 0.439632 0.1"/>
+		<rgb name="specularReflectance" value="0.1 0.1 0.1"/>
+		<float name="exponent" value="400.07177"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_box">
+		<rgb name="reflectance" value="0.7 0.439632 0.1"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_108008136_material">
+		<rgb name="reflectance" value="0.149938 0.00243034 0.246168"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="wire_006135113_material">
+		<rgb name="reflectance" value="0.00181889 0.242269 0.165103"/>
+	</bsdf>
+
+	<bsdf type="phong" id="mat_pear">
+		<rgb name="diffuseReflectance" value="0.25 0.3 0.1"/>
+		<rgb name="specularReflectance" value="0.025 0.03 0.01"/>
+		<float name="exponent" value="20.07177"/>
+	</bsdf>
+
+	<bsdf type="phong" id="mat_apple">
+		<rgb name="diffuseReflectance" value="0.25 0.01 0.01"/>
+		<rgb name="specularReflectance" value="0.025 0.025 0.025"/>
+		<float name="exponent" value="400.07177"/>
+	</bsdf>
+
+	<bsdf type="phong" id="mat_lemon">
+		<rgb name="diffuseReflectance" value="0.25 0.25 0.01"/>
+		<rgb name="specularReflectance" value="0.025 0.025 0.001"/>
+		<float name="exponent" value="20.07177"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_steny">
+		<rgb name="reflectance" value="0.9 0.9 0.9"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_prac_deska_ostrov">
+		<rgb name="reflectance" value="0.9 0.9 0.9"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_podlaha">
+		<rgb name="reflectance" value="0.9 0.9 0.9"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_nuz">
+		<rgb name="reflectance" value="0.1 0.05 0.035"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_strop">
+		<rgb name="reflectance" value="0.9 0.9 0.9"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="zelezo">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.1"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="mat_zatka">
+		<string name="material" value="Al"/>
+		<float name="alpha" value="0.1"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="mat_madlo">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.2"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="mat_papir">
+		<rgb name="reflectance" value="0.9 0.9 0.9"/>
+	</bsdf>
+
+	<bsdf type="conductor" id="mat_opener">
+		<boolean name="usePathGuiding" value="false"/>
+		<string name="material" value="Al"/>
+		<float name="alpha" value="0.0001"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="wire_000000000_material">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.1"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="tools_material">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.01"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="baterie_material">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.01"/>
+	</bsdf>
+
+	<bsdf type="roughconductor" id="pot_material">
+		<string name="material" value="Cr"/>
+		<float name="alpha" value="0.01"/>
+	</bsdf>
+
+	<bsdf type="dielectric" id="mat_glass">
+		<boolean name="usePathGuiding" value="false"/>
+		<float name="intIOR" value="1.5"/>
+		<float name="extIOR" value="1.0"/>
+		<rgb name="specularTransmittance" value="  0.095321 0.564759 0.745344 "/>
+		<float name="alpha" value="0.1"/>
+	</bsdf>
+
+	<bsdf type="dielectric" id="glass2">
+		<boolean name="usePathGuiding" value="false"/>
+		<float name="intIOR" value="1.5"/>
+		<float name="extIOR" value="1.0"/>
+		<rgb name="specularTransmittance" value="  0.9 0.9 0.9 "/>
+		<float name="alpha" value="0.1"/>
+	</bsdf>
+
+	<!-- objects -->
+	<shape type="serialized" id="steny_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="10"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_steny"/>
+	</shape>
+
+	<shape type="serialized" id="podlaha_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="11"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_podlaha"/>
+	</shape>
+
+	<shape type="serialized" id="strop_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="12"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_strop"/>
+	</shape>
+
+	<shape type="serialized" id="okno_ram01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="31"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="okno_ram03_mesh">
+		<transform name="toWorld">
+			<translate x="-9150"/>
+		</transform>
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="31"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="glass2"/>
+	</shape>
+
+	<shape type="serialized" id="konvektor_mriz_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="32"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="okno_ram02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="33"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="sokl_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="0"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="SocleMaterial_material"/>
+	</shape>
+
+	<shape type="serialized" id="prac_deska_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="1"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="korpus_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="2"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="dvirka_sklo01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="3"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="prac_deska_ostrov_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="4"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_prac_deska_ostrov"/>
+	</shape>
+
+	<shape type="serialized" id="korpus_ostrov_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="5"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="owen_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="6"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="owen01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="7"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Object03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="8"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="sokl_ostrov_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="9"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="obklad_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="13"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="zelezo"/>
+	</shape>
+
+	<shape type="serialized" id="varna_deska_ramecek_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="14"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="varna_deska01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="15"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="digestor_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="16"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="trouba_dvirka_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="17"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_177026088_material"/>
+	</shape>
+
+	<shape type="serialized" id="trouba_sklo_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="18"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_177026088_material"/>
+	</shape>
+
+	<shape type="serialized" id="trouba_inner_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="19"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_177026088_material"/>
+	</shape>
+
+	<shape type="serialized" id="Cylinder01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="20"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_177026088_material"/>
+	</shape>
+
+	<shape type="serialized" id="Box03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="21"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_177026088_material"/>
+	</shape>
+
+	<shape type="serialized" id="microvawe_sklo_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="22"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="microvawe_dvirka_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="23"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="microvawe_inner_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="24"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="microvawe_tlacitka_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="25"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="oblozka_L_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="26"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="oblozka_P_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="27"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="madlo_dvirka_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="28"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_madlo"/>
+	</shape>
+
+	<shape type="serialized" id="madla_ostrov_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="29"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_madlo"/>
+	</shape>
+
+	<shape type="serialized" id="madlo_skrinky_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="30"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_madlo"/>
+	</shape>
+
+	<shape type="serialized" id="konvektor_mriz01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="34"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="baterie_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="35"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="baterie_material"/>
+	</shape>
+
+	<shape type="serialized" id="tools_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="36"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="tools_material"/>
+	</shape>
+
+	<shape type="serialized" id="noz05_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="37"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_nuz"/>
+	</shape>
+
+	<shape type="serialized" id="noz06_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="38"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_nuz"/>
+	</shape>
+
+	<shape type="serialized" id="noz03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="39"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_nuz"/>
+	</shape>
+
+	<shape type="serialized" id="noz04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="40"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_nuz"/>
+	</shape>
+
+	<shape type="serialized" id="Object04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="41"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Object01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="42"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Object02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="43"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Rectangle01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="44"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Object03_0_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="45"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="Box02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="46"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_box"/>
+	</shape>
+
+	<shape type="serialized" id="opener_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="47"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_opener"/>
+	</shape>
+
+	<shape type="serialized" id="top_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="48"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_zatka"/>
+	</shape>
+
+	<shape type="serialized" id="bottle_top_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="49"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_zatka"/>
+	</shape>
+
+	<shape type="serialized" id="bottle_01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="50"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_glass"/>
+	</shape>
+
+	<shape type="serialized" id="bottle_02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="51"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_glass"/>
+	</shape>
+
+	<shape type="serialized" id="bottle_03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="52"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_glass"/>
+	</shape>
+
+	<shape type="serialized" id="bottle_top01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="53"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_zatka"/>
+	</shape>
+
+	<shape type="serialized" id="pot_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="54"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="pot_material"/>
+	</shape>
+
+	<shape type="serialized" id="barovka_01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="55"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="barovka_02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="56"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="skrinky_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="57"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="SocleMaterial_material"/>
+	</shape>
+
+	<shape type="serialized" id="paper_holder_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="58"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="wire_000000000_material"/>
+	</shape>
+
+	<shape type="serialized" id="paper_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="59"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_papir"/>
+	</shape>
+
+	<shape type="serialized" id="pear02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="60"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="pear01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="61"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="pear_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="62"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="lemon01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="63"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="lemon03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="64"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="lemon02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="65"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="Apple1_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="66"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="Apple3_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="67"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="Apple2_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="68"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="pear03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="69"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="pear04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="70"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="pear05_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="71"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_pear"/>
+	</shape>
+
+	<shape type="serialized" id="lemon04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="72"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="lemon05_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="73"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="lemon06_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="74"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_lemon"/>
+	</shape>
+
+	<shape type="serialized" id="Apple04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="75"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="Apple05_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="76"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="Apple06_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="77"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_apple"/>
+	</shape>
+
+	<shape type="serialized" id="pot01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="78"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="zelezo"/>
+	</shape>
+
+	<shape type="serialized" id="Bok_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="79"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="SocleMaterial_material"/>
+	</shape>
+
+	<shape type="serialized" id="Plate01_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="80"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_plate"/>
+	</shape>
+
+	<shape type="serialized" id="Plate02_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="81"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_plate"/>
+	</shape>
+
+	<shape type="serialized" id="Plate03_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="82"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_plate"/>
+	</shape>
+
+	<shape type="serialized" id="Plate04_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="83"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_plate"/>
+	</shape>
+
+	<shape type="serialized" id="drez_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="84"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="zelezo"/>
+	</shape>
+
+	<shape type="serialized" id="Stool01Seat_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="85"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<shape type="serialized" id="Stool02Seat_mesh">
+		<string name="filename" value="meshes/kitchen.serialized"/>
+		<integer name="shapeIndex" value="86"/>
+		<boolean name="faceNormals" value="$faceNormalsFlag"/>
+
+		<ref name="bsdf" id="mat_dvirka"/>
+	</shape>
+
+	<emitter type="envmap" id="background">
+		<transform name="toWorld">
+			<rotate y="1" angle="-180"/>
+		</transform>
+		<string name="filename" value="textures/skydome.exr"/>
+	</emitter>
+</scene>

@@ -333,6 +333,11 @@ public:
         return m_usesRayDifferentials;
     }
 
+    /// Return whether this BSDF uses path guiding technique
+    inline bool usePathGuiding() const {
+        return m_usePathGuiding;
+    }
+
     /// Return the diffuse reflectance value (if any)
     virtual Spectrum getDiffuseReflectance(const Intersection &its) const;
 
@@ -540,6 +545,7 @@ protected:
     unsigned int m_combinedType;
     bool m_usesRayDifferentials;
     bool m_ensureEnergyConservation;
+    bool m_usePathGuiding;
 };
 
 MTS_NAMESPACE_END

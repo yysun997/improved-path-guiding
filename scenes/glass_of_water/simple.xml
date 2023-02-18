@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.6.0">
+    <default name="spp" value="352"/>
+
+    <integrator type="guidedpath" >
+        <integer name="maxDepth" value="64" />
+        <integer name="rrDepth" value="64"/>
+        <boolean name="strictNormals" value="true" />
+
+        <integer name="sppPerIteration" value="4"/>
+        <integer name="maxSampleBufferSize" value="320"/>
+    </integrator>
+
+    <include filename="scene.xml"/>
+</scene>
