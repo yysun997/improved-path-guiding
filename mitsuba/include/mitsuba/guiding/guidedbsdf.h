@@ -7,7 +7,8 @@ MTS_NAMESPACE_BEGIN
 class GuidedBSDF {
 public:
 
-    inline GuidedBSDF(const BSDF * bsdf, VMM * model, AdamBSDFSamplingFraction * bsdfFractionModel) {
+    inline GuidedBSDF(const Vector3 & position, const BSDF * bsdf, VMM * model, AdamBSDFSamplingFraction * bsdfFractionModel) {
+        this->position = position;
         this->bsdf = bsdf;
         this->directionModel = model;
         this->bsdfFractionModel = bsdfFractionModel;
@@ -28,7 +29,7 @@ public:
             // one-sample MIS
             pgRec.direction = bRec.its.toWorld(bRec.wo);
 //            assert(!std::isnan(pgRec.direction[0]) && !std::isnan(pgRec.direction[1]) && !std::isnan(pgRec.direction[2]));
-            Float pdfModel = directionModel->pdf(pgRec.direction);
+            Float pdfModel = directionModel->pdf(pgRec.direction, position);
             pgRec.pdf = math::mix(pgRec.bsdfSamplingFraction, pdfModel, pgRec.pdfBSDF);
             return result / pgRec.pdf;
         }
@@ -36,7 +37,7 @@ public:
         // sample model
         Float pdfModel;
         const Point2 reusedSample = {(sample.x - pgRec.bsdfSamplingFraction) / (1 - pgRec.bsdfSamplingFraction), sample.y};
-        pgRec.direction = directionModel->sample(pdfModel, reusedSample);
+        pgRec.direction = directionModel->sample(reusedSample, pdfModel, position);
         bRec.wo = bRec.its.toLocal(pgRec.direction);
         Spectrum result = bsdf->eval(bRec);
         if (result.isZero()) {
@@ -56,13 +57,14 @@ public:
         }
 
         Float bsdfSamplingFraction = bsdfFractionModel->bsdfSamplingFraction();
-        Float pdfModel = directionModel->pdf(wo);
+        Float pdfModel = directionModel->pdf(wo, position);
         Float pdfBSDF = bsdf->pdf(bRec);
         return math::mix(bsdfSamplingFraction, pdfModel, pdfBSDF);
     }
 
 private:
 
+    Vector3 position;
     const BSDF * bsdf;
     VMM * directionModel;
     AdamBSDFSamplingFraction * bsdfFractionModel;

@@ -17,6 +17,7 @@ public:
         m_tree = std::make_shared<BSTree>();
         m_numFlushedSamples = 0;
         m_training = true;
+        m_firstIteration = true;
 
         m_sppPerIteration = props.getInteger("sppPerIteration", 4);
         m_minTrainingSPPFraction = props.getFloat("minTrainingSPPFraction", 0.5);
@@ -49,7 +50,7 @@ public:
         // TODO better criteria for stopping training?
         const int minTrainingSPP = (int) (m_minTrainingSPPFraction * sampleCount);
         const int trainingWindowSize = 5;
-        const int minNumSamplesToTrain = 2048;
+        const int minNumSamplesToTrain = 128;
         const Float minGrowthRate = 2e-3;
 
         /* This is a sampling-based integrator - parallelize */
@@ -106,8 +107,11 @@ public:
             if (m_samples.size() >= minNumSamplesToTrain) {
                 if (m_training) {
                     m_tree->update(m_samples);
+                    m_firstIteration = false;
                 }
                 m_samples.clear();
+            } else {
+                Log(EInfo, "skip training due to insufficient samples");
             }
         }
 
@@ -133,11 +137,13 @@ public:
             success = proc->getReturnStatus() == ParallelProcess::ESuccess;
         }
         sched->unregisterResource(integratorResID);
-//        m_tree->reportStatistics();
+        m_tree->reportStatistics();
+        Log(EInfo, "average distance = %.3f\n", totalDistance / distanceCount);
 
         return success;
     }
 
+    // TODO use a better combine strategy
     void renderBlock(const Scene * scene, const Sensor * sensor, Sampler * sampler, ImageBlock * block,
         const bool & stop, const std::vector< TPoint2<uint8_t> > & points) const override
     {
@@ -202,10 +208,40 @@ public:
             return pdfA / (pdfA + pdfB);
         };
 
+        const auto computeDistanceFactor = [](const BSDFSamplingRecord & bRec) -> Float {
+            Float cosThetaI = Frame::cosTheta(bRec.wi);
+            Float cosThetaO = Frame::cosTheta(bRec.wo);
+            if (cosThetaI * cosThetaO <= 0) {
+                Float sinThetaI = math::safe_sqrt(1 - cosThetaI * cosThetaI);
+                if (sinThetaI > 0) {
+                    Float sinThetaO = math::safe_sqrt(1 - cosThetaO * cosThetaO);
+                    return sinThetaO / sinThetaI;
+                }
+            }
+            return 1;
+        };
+
         /* Perform the first ray intersection (or ignore if the
            intersection has already been provided). */
         rRec.rayIntersect(ray);
         ray.mint = Epsilon;
+
+        // TODO check if this is correct
+        if (!its.isValid()) {
+            if ((rRec.type & RadianceQueryRecord::EEmittedRadiance) && !m_hideEmitters) {
+                /* If no intersection could be found, potentially return
+                radiance from a environment luminaire if it exists */
+                return scene->evalEnvironment(ray);
+            }
+            return Spectrum(0.f);
+        }
+
+        if (its.isEmitter()) {
+            if ((rRec.type & RadianceQueryRecord::EEmittedRadiance) && !m_hideEmitters) {
+                return its.Le(-ray.d);
+            }
+            return Spectrum(0.f);
+        }
 
         Spectrum throughput(1.0f);
         Float eta = 1.0f;
@@ -214,21 +250,24 @@ public:
         struct BounceInfo {
             Spectrum li{0.f};
             Spectrum scatterWeight{0.f};
-            Float scatterPdf{};
-            bool useGuiding{};
+            Float scatterPdf{0};
+            Float distance{0};
+            Float roughness{0};
+            Float distanceFactor{1};
+            bool usePathGuiding{false};
         };
 
         std::vector<BounceInfo> bounces;
 
         while (rRec.depth <= m_maxDepth || m_maxDepth < 0) {
-            if (!its.isValid()) {
-                /* If no intersection could be found, potentially return
-                   radiance from a environment luminaire if it exists */
-                if ((rRec.type & RadianceQueryRecord::EEmittedRadiance) && (!m_hideEmitters || scattered)) {
-                    Li += throughput * scene->evalEnvironment(ray);
-                }
-                break;
-            }
+//            if (!its.isValid()) {
+//                /* If no intersection could be found, potentially return
+//                   radiance from a environment luminaire if it exists */
+//                if ((rRec.type & RadianceQueryRecord::EEmittedRadiance) && (!m_hideEmitters || scattered)) {
+//                    Li += throughput * scene->evalEnvironment(ray);
+//                }
+//                break;
+//            }
 
             pgRecords.emplace_back(its.p);
             PGSamplingRecord & pgRec = pgRecords.back();
@@ -238,15 +277,17 @@ public:
             const BSDF * bsdf = its.getBSDF();
             auto guidedBSDF = m_tree->guidedBSDF(pgRec.position, bsdf);
 
-            bInfo.useGuiding = bsdf->usePathGuiding();
+            bInfo.roughness = bsdf->getRoughness(its);
+            assert(bInfo.roughness >= 0 && bInfo.roughness <= 1);
+            bInfo.usePathGuiding = !m_firstIteration && bInfo.roughness >= 0.01;
 
             /* Possibly include emitted radiance if requested */
-            if (its.isEmitter() && (rRec.type & RadianceQueryRecord::EEmittedRadiance)
-                && (!m_hideEmitters || scattered)) {
-                Spectrum radiance = its.Le(-ray.d);
-                Li += throughput * radiance;
-                bInfo.li += radiance;
-            }
+//            if (its.isEmitter() && (rRec.type & RadianceQueryRecord::EEmittedRadiance)
+//                && (!m_hideEmitters || scattered)) {
+//                Spectrum radiance = its.Le(-ray.d);
+//                Li += throughput * radiance;
+//                bInfo.li += radiance;
+//            }
 
             /* Include radiance from a subsurface scattering model if requested */
             if (its.hasSubsurface() && (rRec.type & RadianceQueryRecord::ESubsurfaceRadiance)) {
@@ -291,7 +332,7 @@ public:
                            using BSDF sampling */
                         Float bsdfPdf = 0;
                         if (emitter->isOnSurface() && dRec.measure == ESolidAngle) {
-                            if (bInfo.useGuiding) {
+                            if (bInfo.usePathGuiding) {
                                 assert(!std::isnan(bRec.wo[0]) && !std::isnan(bRec.wo[1]) && !std::isnan(bRec.wo[2]));
                                 bsdfPdf = guidedBSDF.pdf(bRec);
                             } else {
@@ -319,11 +360,13 @@ public:
 
             Float bsdfPdf;
             Spectrum bsdfWeight;
-            if (bInfo.useGuiding) {
+            if (bInfo.usePathGuiding) {
                 bsdfWeight = guidedBSDF.sample(bRec, pgRec, rRec.nextSample2D());
                 bsdfPdf = pgRec.pdf;
             } else {
                 bsdfWeight = bsdf->sample(bRec, bsdfPdf, rRec.nextSample2D());
+                pgRec.direction = bRec.its.toWorld(bRec.wo);
+                pgRec.pdf = bsdfPdf;
             }
             bInfo.scatterPdf = bsdfPdf;
 
@@ -342,8 +385,6 @@ public:
             if (m_strictNormals && woDotGeoN * Frame::cosTheta(bRec.wo) <= 0) {
                 break;
             }
-
-            ++rRec.depth;
 
             bool hitEmitter = false;
             Spectrum value;
@@ -381,27 +422,40 @@ public:
             throughput *= bsdfWeight;
             eta *= bRec.eta;
             bInfo.scatterWeight = bsdfWeight;
+            bInfo.distanceFactor = computeDistanceFactor(bRec);
 
             /* If a luminaire was hit, estimate the local illumination and
                weight using the power heuristic */
-            if (hitEmitter &&
-                (rRec.type & RadianceQueryRecord::EDirectSurfaceRadiance)) {
-                /* Compute the prob. of generating that direction using the
-                   implemented direct illumination sampling technique */
-                const Float lumPdf = (!(bRec.sampledType & BSDF::EDelta)) ? scene->pdfEmitterDirect(dRec) : 0;
-                Float weight = miWeight(bsdfPdf, lumPdf);
-                Li += throughput * value * weight;
+            if (hitEmitter) {
+                if (rRec.type & RadianceQueryRecord::EDirectSurfaceRadiance) {
+                    /* Compute the prob. of generating that direction using the
+                       implemented direct illumination sampling technique */
+                    const Float lumPdf = (!(bRec.sampledType & BSDF::EDelta)) ? scene->pdfEmitterDirect(dRec) : 0;
+                    Float weight = miWeight(bsdfPdf, lumPdf);
+                    Li += throughput * value * weight;
 
-                bInfo.li += weight * bsdfWeight * value;
+                    bInfo.li += weight * bsdfWeight * value;
 
-                if (m_training && bInfo.useGuiding) {
-                    pgRec.radiance = value.average();
-                    pgRec.product = (bsdfWeight * value * bsdfPdf).average();
-                    if (pgRec.radiance > 0 && pgRec.product > 0) {
-                        addPGSamplingRecord(pgRec);
+//                    if (m_training && bInfo.usePathGuiding) {
+                    if (m_training) {
+                        bInfo.distance = its.isValid() ? its.t : scene->getAABB().getBSphere().radius * 1024;
+                        assert(bInfo.distance > 0);
+                        if (bInfo.roughness >= 0.01) {
+                            pgRec.radiance = value.average();
+                            pgRec.product = (bsdfWeight * value * bsdfPdf).average();
+                            pgRec.distance = bInfo.distance;
+                            if (pgRec.radiance > 0 && pgRec.product > 0) {
+                                addPGSamplingRecord(pgRec);
+                            }
+                        }
                     }
                 }
+                // stop tracing after hitting an emitter
+                break;
             }
+
+            bInfo.distance = its.t;
+            assert(bInfo.distance > 0);
 
             /* ==================================================================== */
             /*                         Indirect illumination                        */
@@ -414,7 +468,7 @@ public:
             }
             rRec.type = RadianceQueryRecord::ERadianceNoEmission;
 
-            if (rRec.depth >= m_rrDepth) {
+            if (rRec.depth++ >= m_rrDepth) {
                 /* Russian roulette: try to keep path weights equal to one,
                    while accounting for the solid angle compression at refractive
                    index boundaries. Stop with at least some probability to avoid
@@ -436,12 +490,44 @@ public:
         assert(bounces.size() == pgRecords.size());
 
         if (m_training) {
+            Float distance = bounces.back().distance;
+            if (!bounces.back().scatterWeight.isZero() && distance <= 0) {
+                auto & bInfo = bounces.back();
+                std::cout << "li = " << bInfo.li.toString() << ", "
+                          << "scatterWeight = " << bInfo.scatterWeight.toString() << ", "
+                          << "scatterPdf = " << bInfo.scatterPdf << ", "
+                          << "distance = " << bInfo.distance << ", "
+                          << "roughness = " << bInfo.roughness << ", "
+                          << "distanceFactor = " << bInfo.distanceFactor
+                          << std::endl;
+                assert(false);
+            }
             for (int i = (int) bounces.size() - 2; i >= 0; --i) {
+                // compute the incident radiance
                 pgRecords[i].radiance = bounces[i + 1].li.average();
                 bounces[i].li += bounces[i + 1].li * bounces[i].scatterWeight;
                 pgRecords[i].product = (bounces[i + 1].li * bounces[i].scatterWeight * bounces[i].scatterPdf).average();
 
-                if (bounces[i].useGuiding && pgRecords[i].radiance > 0 && pgRecords[i].product > 0) {
+                // compute the perceived distance
+                if (bounces[i + 1].roughness >= 0.3) {
+                    distance = bounces[i].distance;
+                } else {
+                    distance *= bounces[i + 1].distanceFactor;
+                    distance += bounces[i].distance;
+                }
+                pgRecords[i].distance = distance;
+
+                std::unique_lock<std::mutex> lock(distanceMutex);
+                totalDistance += distance;
+                distanceCount += 1;
+                lock.unlock();
+
+                assert(!std::isnan(distance) && std::isfinite(distance) && distance > 0);
+
+//                if (bounces[i].usePathGuiding && pgRecords[i].radiance > 0 && pgRecords[i].product > 0) {
+//                    addPGSamplingRecord(pgRecords[i]);
+//                }
+                if (bounces[i].roughness >= 0.01 && pgRecords[i].radiance > 0 && pgRecords[i].product > 0) {
                     addPGSamplingRecord(pgRecords[i]);
                 }
             }
@@ -472,13 +558,18 @@ private:
     mutable std::shared_ptr<BSTree> m_tree;
     mutable int m_numFlushedSamples;
     mutable bool m_training;
+    mutable bool m_firstIteration;
+
+    mutable std::mutex distanceMutex;
+    mutable double totalDistance{};
+    mutable uint64_t distanceCount{};
 
     Float m_minTrainingSPPFraction;
     int m_sppPerIteration;
     int m_maxSampleBufferSize;
 
     inline void addPGSamplingRecord(const PGSamplingRecord & pgRec) const {
-        if (pgRec.radiance <= 0 || pgRec.product <= 0 || pgRec.pdf <= 0 || pgRec.pdfBSDF <= 0) {
+        if (pgRec.radiance <= 0 || pgRec.product <= 0 || pgRec.pdf < 0 || pgRec.pdfBSDF < 0) {
             std::cout << "pgRec.position = " << pgRec.position.toString() << std::endl
                       << "pgRec.direction = " << pgRec.direction.toString() << std::endl
                       << "pgRec.bsdfSamplingFraction = " << pgRec.bsdfSamplingFraction << std::endl

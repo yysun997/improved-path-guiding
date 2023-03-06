@@ -394,6 +394,10 @@ public:
         return 0.0f;
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return 0;
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "SmoothDielectric[" << endl

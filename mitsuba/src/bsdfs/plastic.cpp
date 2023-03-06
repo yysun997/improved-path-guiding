@@ -448,6 +448,10 @@ public:
             return std::numeric_limits<Float>::infinity();
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return 1 - m_specularSamplingWeight;
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "SmoothPlastic[" << endl

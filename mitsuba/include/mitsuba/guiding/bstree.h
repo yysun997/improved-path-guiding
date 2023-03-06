@@ -29,6 +29,7 @@ public:
         // wrap the distribution
         auto * leaf = (Leaf *) currentNode;
         return {
+            position,
             bsdf,
             leaf->directionModel,
             leaf->bsdfFractionModel
@@ -41,40 +42,40 @@ public:
         root = root->update(samples, 0, (int) samples.size());
     }
 
-//    void reportStatistics() const {
-//        // count the number of nodes
-//        int numNodes = 0;
-//        int numLeaves = 0;
-//        std::queue<Node *> nodes;
-//        nodes.push(root);
-//        while (!nodes.empty()) {
-//            Node * currentNode = nodes.front();
-//            nodes.pop();
-//            numNodes += 1;
-//            numLeaves += currentNode->isLeaf;
-//            if (!currentNode->isLeaf) {
-//                nodes.push(((Branch *) currentNode)->children[0]);
-//                nodes.push(((Branch *) currentNode)->children[1]);
-//            }
-//        }
-//
-//        Float MB = 1024.f * 1024;
-//        Float memoryForInner = (numNodes - numLeaves) * sizeof(Branch) / MB;
-//        Float memoryForLeaves = numLeaves * sizeof(Leaf) / MB;
-//        Float memoryForVMMs = numLeaves * sizeof(VMM) / MB;
-//        Float memoryForFractionModel = numLeaves * sizeof(AdamBSDFSamplingFraction) / MB;
-//        Float memoryTotal = memoryForInner + memoryForLeaves + memoryForVMMs + memoryForFractionModel;
-//
-//        std::cout << "BSTree Statistics {" << std::endl
-//                  << "  Number of all nodes: " << numNodes << std::endl
-//                  << "  Number of leaf nodes: " << numLeaves << std::endl
-//                  << "  Memory for inner nodes: " << memoryForInner << " MB" << std::endl
-//                  << "  Memory for leaf nodes: " << memoryForLeaves << " MB" << std::endl
-//                  << "  Memory for direction model: " << memoryForVMMs << " MB" << std::endl
-//                  << "  Memory for fraction model: " << memoryForFractionModel << " MB" << std::endl
-//                  << "  Estimated total memory: " << memoryTotal << " MB" << std::endl
-//                  << "}";
-//    }
+    void reportStatistics() const {
+        // count the number of nodes
+        int numNodes = 0;
+        int numLeaves = 0;
+        std::queue<Node *> nodes;
+        nodes.push(root);
+        while (!nodes.empty()) {
+            Node * currentNode = nodes.front();
+            nodes.pop();
+            numNodes += 1;
+            numLeaves += currentNode->isLeaf;
+            if (!currentNode->isLeaf) {
+                nodes.push(((Branch *) currentNode)->children[0]);
+                nodes.push(((Branch *) currentNode)->children[1]);
+            }
+        }
+
+        Float MB = 1024.f * 1024;
+        Float memoryForInner = (numNodes - numLeaves) * sizeof(Branch) / MB;
+        Float memoryForLeaves = numLeaves * sizeof(Leaf) / MB;
+        Float memoryForVMMs = numLeaves * sizeof(VMM) / MB;
+        Float memoryForFractionModel = numLeaves * sizeof(AdamBSDFSamplingFraction) / MB;
+        Float memoryTotal = memoryForInner + memoryForLeaves + memoryForVMMs + memoryForFractionModel;
+
+        std::cout << "BSTree Statistics {" << std::endl
+                  << "  Number of all nodes: " << numNodes << std::endl
+                  << "  Number of leaf nodes: " << numLeaves << std::endl
+                  << "  Memory for inner nodes: " << memoryForInner << " MB" << std::endl
+                  << "  Memory for leaf nodes: " << memoryForLeaves << " MB" << std::endl
+                  << "  Memory for direction model: " << memoryForVMMs << " MB" << std::endl
+                  << "  Memory for fraction model: " << memoryForFractionModel << " MB" << std::endl
+                  << "  Estimated total memory: " << memoryTotal << " MB" << std::endl
+                  << "}";
+    }
 
 private:
 
@@ -138,6 +139,7 @@ private:
     struct Leaf : public Node {
 
         constexpr static int MAX_NUM_SAMPLES = 32768;
+//        constexpr static int MAX_NUM_SAMPLES = 2147483647;
 
         Vector3 positionMean;
         Vector3 positionVariance;
@@ -197,7 +199,7 @@ private:
 
             // update the model
             bsdfFractionModel->update(samples, start, end);
-            directionModel->update(samples, start, end);
+            directionModel->update(samples, start, end, positionMean);
             return this;
         }
     };

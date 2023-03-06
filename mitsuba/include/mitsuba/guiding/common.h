@@ -9,15 +9,38 @@ struct PGSamplingRecord {
     Vector3 direction;
     Float radiance{};
     Float pdf{};
+    Float distance{};
 
     Float product{};
     Float bsdfSamplingFraction{};
     Float pdfBSDF{};
 
-    inline explicit PGSamplingRecord(const Point3 & position)
-    {
+    inline explicit PGSamplingRecord(const Point3 & position) {
         this->position = Vector3(position);
     }
+
+//    inline bool isValid() const {
+//        for (int i = 0; i < 3; ++i) {
+//            if (std::isnan(position[i]) || !std::isfinite(position[i]) ||
+//                std::isnan(direction[i]) || !std::isfinite(direction[i]) || direction.isZero())
+//            {
+//                return false;
+//            }
+//        }
+//
+//        if (std::isnan(radiance) || !std::isfinite(radiance) || radiance <= 0 ||
+//            std::isnan(pdf) || !std::isfinite(pdf) || pdf <= 0 ||
+//            std::isnan(distance) || !std::isfinite(distance) || distance <= 0 ||
+//            std::isnan(product) || !std::isfinite(product) || product <= 0 ||
+//            std::isnan(bsdfSamplingFraction) || bsdfSamplingFraction < 0 || bsdfSamplingFraction >= 1 ||
+//            std::isnan(pdfBSDF) || !std::isfinite(pdfBSDF) || pdfBSDF < 0)
+//        {
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
 };
 
 namespace math {

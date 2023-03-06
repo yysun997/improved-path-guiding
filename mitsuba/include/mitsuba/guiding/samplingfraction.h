@@ -5,6 +5,7 @@
 MTS_NAMESPACE_BEGIN
 
 // for this implementation see Muller et al. 2019 "Path Guiding in Production"
+// TODO bad on the scene "clocks", may be replaced by a heuristic function based on roughness?
 class AdamBSDFSamplingFraction {
 public:
 
@@ -23,35 +24,37 @@ public:
     }
 
     void update(const std::vector<PGSamplingRecord> & samples, int start, int end) {
-        int batchStart = start;
-        while (batchStart < end) {
-            int batchEnd = std::min(batchStart + BATCH_SIZE, end);
-
-            // compute the gradients
-            Float gradients = 0;
-            for (int i = batchStart; i < batchEnd; ++i) {
-                Float pdfModel = (samples[i].pdf - samples[i].bsdfSamplingFraction * samples[i].pdfBSDF) /
-                                 (1 - samples[i].bsdfSamplingFraction);
-                gradients += -samples[i].product * (samples[i].pdfBSDF - pdfModel) /
-                             (samples[i].pdf * samples[i].pdf) *
-                             samples[i].bsdfSamplingFraction * (1 - samples[i].bsdfSamplingFraction) +
-                             regularization * param;
-            }
-            gradients /= (Float) (batchEnd - batchStart);
-
-            // perform an Adam step
-            batchIndex += 1;
-            Float step = learningRate * std::sqrt(1 - std::pow(beta2, batchIndex)) / (1 - std::pow(beta1, batchIndex));
-            firstMoment = math::mix(beta1, gradients, firstMoment);
-            secondMoment = math::mix(beta2, gradients * gradients, secondMoment);
-            param -= step * firstMoment / (std::sqrt(secondMoment) + EPSILON);
-
-            batchStart = batchEnd;
-        }
+        return;
+//        int batchStart = start;
+//        while (batchStart < end) {
+//            int batchEnd = std::min(batchStart + BATCH_SIZE, end);
+//
+//            // compute the gradients
+//            Float gradients = 0;
+//            for (int i = batchStart; i < batchEnd; ++i) {
+//                Float pdfModel = (samples[i].pdf - samples[i].bsdfSamplingFraction * samples[i].pdfBSDF) /
+//                                 (1 - samples[i].bsdfSamplingFraction);
+//                gradients += -samples[i].product * (samples[i].pdfBSDF - pdfModel) /
+//                             (samples[i].pdf * samples[i].pdf) *
+//                             samples[i].bsdfSamplingFraction * (1 - samples[i].bsdfSamplingFraction) +
+//                             regularization * param;
+//            }
+//            gradients /= (Float) (batchEnd - batchStart);
+//
+//            // perform an Adam step
+//            batchIndex += 1;
+//            Float step = learningRate * std::sqrt(1 - std::pow(beta2, batchIndex)) / (1 - std::pow(beta1, batchIndex));
+//            firstMoment = math::mix(beta1, gradients, firstMoment);
+//            secondMoment = math::mix(beta2, gradients * gradients, secondMoment);
+//            param -= step * firstMoment / (std::sqrt(secondMoment) + EPSILON);
+//
+//            batchStart = batchEnd;
+//        }
     }
 
     inline Float bsdfSamplingFraction() const {
-        return 1.f / (1.f + std::exp(-param));
+//        return 1.f / (1.f + std::exp(-param));
+        return 0.5;
     }
 
     inline void retarget() {

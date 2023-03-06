@@ -305,14 +305,14 @@ public:
             Vector H = sphericalDirection(thetaH, phiH);
             bRec.wo = H * (2.0f * dot(bRec.wi, H)) - bRec.wi;
 
-            bRec.sampledComponent = 1;
+            bRec.sampledComponent = 0;
             bRec.sampledType = EGlossyReflection;
 
             if (Frame::cosTheta(bRec.wo) <= 0.0f)
                 return Spectrum(0.0f);
         } else {
             bRec.wo = warp::squareToCosineHemisphere(sample);
-            bRec.sampledComponent = 0;
+            bRec.sampledComponent = 1;
             bRec.sampledType = EDiffuseReflection;
         }
         bRec.eta = 1.0f;
@@ -365,6 +365,10 @@ public:
                 + m_alphaV->eval(its).average());
         else
             return std::numeric_limits<Float>::infinity();
+    }
+
+    Float getRoughness(const Intersection &its) const override {
+        return m_specularSamplingWeight * getRoughness(its, 0) + (1 - m_specularSamplingWeight) * 1;
     }
 
     Shader *createShader(Renderer *renderer) const;
