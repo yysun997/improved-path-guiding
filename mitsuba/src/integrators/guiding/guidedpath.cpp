@@ -2,7 +2,7 @@
 #include "mitsuba/core/statistics.h"
 #include "mitsuba/render/renderproc.h"
 #include "mitsuba/guiding/guiding.h"
-#include <condition_variable>
+#include <shared_mutex>
 
 MTS_NAMESPACE_BEGIN
 
@@ -14,17 +14,18 @@ public:
     inline explicit GuidedPathTracer(const Properties & props)
         : MonteCarloIntegrator(props)
     {
-        m_tree = std::make_shared<BSTree>();
+        m_tree = std::make_shared<AdaptiveKDTree>();
         m_numFlushedSamples = 0;
         m_training = true;
         m_firstIteration = true;
+        m_timer = new Timer();
 
         m_sppPerIteration = props.getInteger("sppPerIteration", 4);
-        m_minTrainingSPPFraction = props.getFloat("minTrainingSPPFraction", 0.5);
+        m_trainingSPPFraction = props.getFloat("trainingSPPFraction", 0.5);
 
         // in megabytes
         m_maxSampleBufferSize = props.getInteger("maxSampleBufferSize", 256);
-        m_maxSampleBufferSize = m_maxSampleBufferSize * (1024 * 1024 / sizeof(PGSamplingRecord));
+        m_maxSampleBufferSize = m_maxSampleBufferSize * (1024 * 1024 / sizeof(PGSampleData));
     }
 
     ~GuidedPathTracer() override = default;
@@ -47,20 +48,16 @@ public:
 
         bool success = true;
 
-        // TODO better criteria for stopping training?
-        const int minTrainingSPP = (int) (m_minTrainingSPPFraction * sampleCount);
-        const int trainingWindowSize = 5;
-        const int minNumSamplesToTrain = 128;
-        const Float minGrowthRate = 2e-3;
+        const int trainingSPP = m_trainingSPPFraction * sampleCount;
+        const int minNumSamplesToTrain = 1;
 
         /* This is a sampling-based integrator - parallelize */
         int iteration = 0;
-        int sppRendered = 0;
-        int numValidSamples[trainingWindowSize];
+        size_t sppRendered = 0;
         int integratorResID = sched->registerResource(this);
         while (sppRendered < sampleCount && m_training) {
             if (sppRendered + m_sppPerIteration > sampleCount) {
-                m_sppPerIteration = (int) sampleCount - sppRendered;
+                m_sppPerIteration = sampleCount - sppRendered;
             }
 
             m_numFlushedSamples = 0;
@@ -85,29 +82,23 @@ public:
                 break;
             }
 
-            int numSamplesInIteration = m_numFlushedSamples + m_samples.size();
+            size_t numSamplesInIteration = m_numFlushedSamples + m_samples.size();
             Log(EInfo, "got %d samples in iteration %d", numSamplesInIteration, iteration);
 
-            numValidSamples[(iteration - 1) % trainingWindowSize] = numSamplesInIteration;
-            if (iteration >= trainingWindowSize) {
-                int minValue = std::numeric_limits<int>::max();
-                int maxValue = std::numeric_limits<int>::min();
-                for (int num: numValidSamples) {
-                    minValue = std::min(minValue, num);
-                    maxValue = std::max(maxValue, num);
-                }
-
-                Float avgFiveGrowthRate = (Float) (maxValue - minValue) / minValue;
-                if ((sppRendered >= minTrainingSPP && avgFiveGrowthRate < minGrowthRate) || sppRendered == sampleCount) {
-                    Log(EInfo, "stop training after iteration %d", iteration);
-                    m_training = false;
-                }
+            if ((sppRendered >= trainingSPP)) {
+                Log(EInfo, "stop training after iteration %d", iteration);
+                m_training = false;
             }
 
             if (m_samples.size() >= minNumSamplesToTrain) {
                 if (m_training) {
+                    m_timer->reset(true);
+
                     m_tree->update(m_samples);
                     m_firstIteration = false;
+
+                    Float elapsedTime = m_timer->stop();
+                    Log(EInfo, "elapsed training time: %s", timeString(elapsedTime, true).c_str());
                 }
                 m_samples.clear();
             } else {
@@ -115,7 +106,7 @@ public:
             }
         }
 
-        std::vector<PGSamplingRecord>().swap(m_samples);
+        std::vector<PGSampleData>().swap(m_samples);
 
         if (success && sppRendered < sampleCount) {
             m_sppPerIteration = sampleCount - sppRendered;
@@ -137,8 +128,6 @@ public:
             success = proc->getReturnStatus() == ParallelProcess::ESuccess;
         }
         sched->unregisterResource(integratorResID);
-        m_tree->reportStatistics();
-        Log(EInfo, "average distance = %.3f\n", totalDistance / distanceCount);
 
         return success;
     }
@@ -226,7 +215,6 @@ public:
         rRec.rayIntersect(ray);
         ray.mint = Epsilon;
 
-        // TODO check if this is correct
         if (!its.isValid()) {
             if ((rRec.type & RadianceQueryRecord::EEmittedRadiance) && !m_hideEmitters) {
                 /* If no intersection could be found, potentially return
@@ -245,12 +233,13 @@ public:
 
         Spectrum throughput(1.0f);
         Float eta = 1.0f;
-        std::vector<PGSamplingRecord> pgRecords;
 
         struct BounceInfo {
             Spectrum li{0.f};
-            Spectrum scatterWeight{0.f};
-            Float scatterPdf{0};
+            Spectrum bsdfWeight{0.f};
+            Vector3 position;
+            Vector3 direction;
+            Float bsdfPdf{0};
             Float distance{0};
             Float roughness{0};
             Float distanceFactor{1};
@@ -258,6 +247,7 @@ public:
         };
 
         std::vector<BounceInfo> bounces;
+        thread_local GuidedBSDF guidedBSDF;
 
         while (rRec.depth <= m_maxDepth || m_maxDepth < 0) {
 //            if (!its.isValid()) {
@@ -269,13 +259,12 @@ public:
 //                break;
 //            }
 
-            pgRecords.emplace_back(its.p);
-            PGSamplingRecord & pgRec = pgRecords.back();
             bounces.emplace_back();
             BounceInfo & bInfo = bounces.back();
+            bInfo.position = Vector3(its.p);
 
             const BSDF * bsdf = its.getBSDF();
-            auto guidedBSDF = m_tree->guidedBSDF(pgRec.position, bsdf);
+            prepareGuidedBSDF(guidedBSDF, bsdf, bInfo.position);
 
             bInfo.roughness = bsdf->getRoughness(its);
             assert(bInfo.roughness >= 0 && bInfo.roughness <= 1);
@@ -333,8 +322,10 @@ public:
                         Float bsdfPdf = 0;
                         if (emitter->isOnSurface() && dRec.measure == ESolidAngle) {
                             if (bInfo.usePathGuiding) {
-                                assert(!std::isnan(bRec.wo[0]) && !std::isnan(bRec.wo[1]) && !std::isnan(bRec.wo[2]));
                                 bsdfPdf = guidedBSDF.pdf(bRec);
+                                if (std::isnan(bsdfPdf)) {
+                                    Log(EWarn, "encountered NaN when evaluating pdf on GuidedBSDF!");
+                                }
                             } else {
                                 bsdfPdf = bsdf->pdf(bRec);
                             }
@@ -361,21 +352,17 @@ public:
             Float bsdfPdf;
             Spectrum bsdfWeight;
             if (bInfo.usePathGuiding) {
-                bsdfWeight = guidedBSDF.sample(bRec, pgRec, rRec.nextSample2D());
-                bsdfPdf = pgRec.pdf;
+                bsdfWeight = guidedBSDF.sample(bRec, bsdfPdf, rRec.nextSample2D());
+                if (std::isnan(bsdfPdf) || bsdfWeight.isNaN()) {
+                    Log(EWarn, "encountered NaN when sampling GuidedBSDF!");
+                }
             } else {
                 bsdfWeight = bsdf->sample(bRec, bsdfPdf, rRec.nextSample2D());
-                pgRec.direction = bRec.its.toWorld(bRec.wo);
-                pgRec.pdf = bsdfPdf;
             }
-            bInfo.scatterPdf = bsdfPdf;
 
             if (bsdfWeight.isZero()) {
                 break;
             }
-
-            assert(!std::isnan(bsdfPdf));
-            assert(!bsdfWeight.isNaN());
 
             scattered |= bRec.sampledType != BSDF::ENull;
 
@@ -417,12 +404,15 @@ public:
                 }
             }
 
+            bInfo.bsdfWeight = bsdfWeight;
+            bInfo.bsdfPdf = bsdfPdf;
+            bInfo.distanceFactor = computeDistanceFactor(bRec);
+            bInfo.direction = wo;
+
             /* Keep track of the throughput and relative
                refractive index along the path */
             throughput *= bsdfWeight;
             eta *= bRec.eta;
-            bInfo.scatterWeight = bsdfWeight;
-            bInfo.distanceFactor = computeDistanceFactor(bRec);
 
             /* If a luminaire was hit, estimate the local illumination and
                weight using the power heuristic */
@@ -436,17 +426,12 @@ public:
 
                     bInfo.li += weight * bsdfWeight * value;
 
-//                    if (m_training && bInfo.usePathGuiding) {
                     if (m_training) {
+                        Float radiance = value.average();
                         bInfo.distance = its.isValid() ? its.t : scene->getAABB().getBSphere().radius * 1024;
                         assert(bInfo.distance > 0);
-                        if (bInfo.roughness >= 0.01) {
-                            pgRec.radiance = value.average();
-                            pgRec.product = (bsdfWeight * value * bsdfPdf).average();
-                            pgRec.distance = bInfo.distance;
-                            if (pgRec.radiance > 0 && pgRec.product > 0) {
-                                addPGSamplingRecord(pgRec);
-                            }
+                        if (bInfo.roughness >= 0.01 && radiance > 0) {
+                            addPGSampleData(bInfo.position, bInfo.direction, radiance, bInfo.bsdfPdf, bInfo.distance);
                         }
                     }
                 }
@@ -479,7 +464,7 @@ public:
                     break;
                 }
                 throughput /= q;
-                bInfo.scatterWeight /= q;
+                bInfo.bsdfWeight /= q;
             }
         }
 
@@ -487,26 +472,14 @@ public:
         avgPathLength.incrementBase();
         avgPathLength += rRec.depth;
 
-        assert(bounces.size() == pgRecords.size());
-
+        // TODO decay sample values based on roughness to get a smoother behaviour?
         if (m_training) {
             Float distance = bounces.back().distance;
-            if (!bounces.back().scatterWeight.isZero() && distance <= 0) {
-                auto & bInfo = bounces.back();
-                std::cout << "li = " << bInfo.li.toString() << ", "
-                          << "scatterWeight = " << bInfo.scatterWeight.toString() << ", "
-                          << "scatterPdf = " << bInfo.scatterPdf << ", "
-                          << "distance = " << bInfo.distance << ", "
-                          << "roughness = " << bInfo.roughness << ", "
-                          << "distanceFactor = " << bInfo.distanceFactor
-                          << std::endl;
-                assert(false);
-            }
+            assert(bounces.back().bsdfWeight.isZero() || distance > 0);
             for (int i = (int) bounces.size() - 2; i >= 0; --i) {
                 // compute the incident radiance
-                pgRecords[i].radiance = bounces[i + 1].li.average();
-                bounces[i].li += bounces[i + 1].li * bounces[i].scatterWeight;
-                pgRecords[i].product = (bounces[i + 1].li * bounces[i].scatterWeight * bounces[i].scatterPdf).average();
+                Float radiance = bounces[i + 1].li.average();
+                bounces[i].li += bounces[i + 1].li * bounces[i].bsdfWeight;
 
                 // compute the perceived distance
                 if (bounces[i + 1].roughness >= 0.3) {
@@ -515,20 +488,11 @@ public:
                     distance *= bounces[i + 1].distanceFactor;
                     distance += bounces[i].distance;
                 }
-                pgRecords[i].distance = distance;
-
-                std::unique_lock<std::mutex> lock(distanceMutex);
-                totalDistance += distance;
-                distanceCount += 1;
-                lock.unlock();
 
                 assert(!std::isnan(distance) && std::isfinite(distance) && distance > 0);
 
-//                if (bounces[i].usePathGuiding && pgRecords[i].radiance > 0 && pgRecords[i].product > 0) {
-//                    addPGSamplingRecord(pgRecords[i]);
-//                }
-                if (bounces[i].roughness >= 0.01 && pgRecords[i].radiance > 0 && pgRecords[i].product > 0) {
-                    addPGSamplingRecord(pgRecords[i]);
+                if (bounces[i].roughness >= 0.01 && radiance > 0) {
+                    addPGSampleData(bounces[i].position, bounces[i].direction, radiance, bounces[i].bsdfPdf, distance);
                 }
             }
         }
@@ -552,45 +516,46 @@ public:
 
 private:
 
-    mutable std::mutex m_sampleMutex;
-    mutable std::condition_variable m_sampleCV;
-    mutable std::vector<PGSamplingRecord> m_samples;
-    mutable std::shared_ptr<BSTree> m_tree;
-    mutable int m_numFlushedSamples;
+    using AdaptiveKDTree = PathGuiding::kdtree::AdaptiveKDTree;
+    using GuidedBSDF = PathGuiding::GuidedBSDF;
+    using PGSampleData = PathGuiding::SampleData;
+
+    mutable std::shared_ptr<AdaptiveKDTree> m_tree;
+
     mutable bool m_training;
     mutable bool m_firstIteration;
+    mutable ref<Timer> m_timer;
 
-    mutable std::mutex distanceMutex;
-    mutable double totalDistance{};
-    mutable uint64_t distanceCount{};
+    mutable std::mutex m_sampleMutex;
+    mutable std::vector<PGSampleData> m_samples;
+    mutable size_t m_numFlushedSamples;
 
-    Float m_minTrainingSPPFraction;
-    int m_sppPerIteration;
-    int m_maxSampleBufferSize;
+    mutable std::shared_mutex m_guidingMutex;
 
-    inline void addPGSamplingRecord(const PGSamplingRecord & pgRec) const {
-        if (pgRec.radiance <= 0 || pgRec.product <= 0 || pgRec.pdf < 0 || pgRec.pdfBSDF < 0) {
-            std::cout << "pgRec.position = " << pgRec.position.toString() << std::endl
-                      << "pgRec.direction = " << pgRec.direction.toString() << std::endl
-                      << "pgRec.bsdfSamplingFraction = " << pgRec.bsdfSamplingFraction << std::endl
-                      << "pgRec.radiance = " << pgRec.radiance << std::endl
-                      << "pgRec.product = " << pgRec.product << std::endl
-                      << "pgRec.pdf = " << pgRec.pdf << std::endl
-                      << "pgRec.pdfBSDF = " << pgRec.pdfBSDF << std::endl;
-            assert(false);
+    Float m_trainingSPPFraction;
+    size_t m_sppPerIteration;
+    size_t m_maxSampleBufferSize;
+
+    inline void addPGSampleData(const Vector3 & position, const Vector3 & direction,
+        Float radiance, Float pdf, Float distance) const
+    {
+        PGSampleData data(Vector3(position), direction, radiance, pdf, distance);
+        if (data.isValid()) {
+            std::unique_lock<std::mutex> sampleLock(m_sampleMutex);
+            m_samples.push_back(data);
+
+            if (m_samples.size() >= m_maxSampleBufferSize) {
+                std::unique_lock guidingLock(m_guidingMutex);
+                m_tree->update(m_samples);
+                m_numFlushedSamples += m_samples.size();
+                m_samples.clear();
+            }
         }
+    }
 
-        std::unique_lock<std::mutex> lock(m_sampleMutex);
-        m_sampleCV.wait(lock, [this] { return m_samples.size() < m_maxSampleBufferSize; });
-        m_samples.push_back(pgRec);
-
-        if (m_samples.size() >= m_maxSampleBufferSize) {
-            lock.unlock();
-            m_tree->update(m_samples);
-            m_numFlushedSamples += m_samples.size();
-            m_samples.clear();
-            m_sampleCV.notify_all();
-        }
+    inline void prepareGuidedBSDF(GuidedBSDF & guidedBSDF, const BSDF * bsdf, const Vector3 & position) const {
+        std::shared_lock lock(m_guidingMutex);
+        m_tree->getGuidedBSDF(guidedBSDF, bsdf, position);
     }
 };
 

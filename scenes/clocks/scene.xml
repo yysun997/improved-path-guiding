@@ -17,8 +17,8 @@
 		<film type="hdrfilm">
 			<boolean name="attachLog" value="false"/>
 			<boolean name="banner" value="false"/>
-			<integer name="width" value="800"/>
-			<integer name="height" value="600"/>
+			<integer name="width" value="$width"/>
+			<integer name="height" value="$height"/>
 			<rfilter type="box"/>
 		</film>
 	</sensor>

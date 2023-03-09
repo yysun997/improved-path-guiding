@@ -1,10 +1,13 @@
 <scene version="0.6.0">
     <default name="spp" value="256"/>
+    <default name="width" value="800"/>
+    <default name="height" value="600"/>
 
     <integrator type="guidedpath">
         <integer name="maxDepth" value="32"/>
         <integer name="rrDepth" value="32"/>
 
+        <float name="trainingSPPFraction" value="0.5"/>
         <integer name="sppPerIteration" value="4"/>
         <integer name="maxSampleBufferSize" value="320"/>
     </integrator>

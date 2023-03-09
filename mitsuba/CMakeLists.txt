@@ -12,7 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build Mitsuba in ${CMAKE_BUILD_TYPE} mode")
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
@@ -21,7 +21,7 @@ set(CMAKE_CXX_FLAGS "-msse2 -fopenmp -fPIC")
 
 add_compile_definitions(
   GLEW_MX
-  MTS_DEBUG
+#  MTS_DEBUG
   SINGLE_PRECISION
   SPECTRUM_SAMPLES=3
   MTS_SSE MTS_HAS_COHERENT_RT)
