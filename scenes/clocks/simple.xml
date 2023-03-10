@@ -7,7 +7,7 @@
         <integer name="maxDepth" value="32"/>
         <integer name="rrDepth" value="32"/>
 
-        <float name="trainingSPPFraction" value="0.5"/>
+        <float name="trainingSPPFraction" value="1"/>
         <integer name="sppPerIteration" value="4"/>
         <integer name="maxSampleBufferSize" value="320"/>
     </integrator>

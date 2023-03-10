@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS "-msse2 -fopenmp -fPIC")
+set(CMAKE_CXX_FLAGS "-msse2 -fPIC")
 
 add_compile_definitions(
   GLEW_MX

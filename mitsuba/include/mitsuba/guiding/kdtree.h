@@ -2,6 +2,7 @@
 #include <mutex>
 #include <vector>
 #include "guidedbsdf.h"
+#include <omp.h>
 
 MTS_NAMESPACE_BEGIN
 
@@ -116,6 +117,9 @@ public:
     }
 
     inline void update(std::vector<SampleData> & samples) {
+        size_t nCores = Scheduler::getInstance()->getCoreCount();
+        Thread::initializeOpenMP(nCores);
+
 #pragma omp parallel default(none), shared(samples)
 #pragma omp single nowait
         updateNode(root, samples.begin(), samples.end());
@@ -159,8 +163,9 @@ private:
                 return sample.position[node->splitAxis] < node->splitPos;
             });
 
-#pragma omp task mergeable default(none), firstprivate(node, begin, middle, end)
+#pragma omp task mergeable default(none), firstprivate(node, begin, middle)
             updateNode(node->children[0], begin, middle);
+#pragma omp task mergeable default(none), firstprivate(node, middle, end)
             updateNode(node->children[1], middle, end);
         }
     }

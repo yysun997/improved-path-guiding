@@ -49,7 +49,7 @@ public:
         bool success = true;
 
         const int trainingSPP = m_trainingSPPFraction * sampleCount;
-        const int minNumSamplesToTrain = 1;
+        const int minNumSamplesToTrain = 128;
 
         /* This is a sampling-based integrator - parallelize */
         int iteration = 0;

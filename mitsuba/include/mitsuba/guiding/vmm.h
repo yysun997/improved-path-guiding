@@ -28,8 +28,16 @@ private:
     PacketVec3 mu;
     Packet kappa{};
     Packet alpha{};
+    Packet eMin2Kappa{};
+    Packet pdfFactor{};
 
     inline VMFKernel() = default;
+
+    inline void refreshCache() {
+        eMin2Kappa = std::experimental::exp(-2.f * kappa);
+        Packet de = 2 * M_PI * (1.f - eMin2Kappa);
+        pdfFactor = kappa / de;
+    }
 
     [[nodiscard]]
     inline Vector3 sample(size_t i, const Vector2 & rn) const {
@@ -39,8 +47,8 @@ private:
         Scalar sinPhi, cosPhi;
         math::sincos(2 * M_PI * rn.y, &sinPhi, &cosPhi);
 
-        Scalar value = rn.x + (1.f - rn.x) * math::fastexp(-2 * kappaI);
-        Scalar cosTheta = math::clamp(1.f + math::fastlog(value) / kappaI, -1.f, 1.f);
+        Scalar value = rn.x + (1.f - rn.x) * eMin2Kappa[i];
+        Scalar cosTheta = math::clamp(1.f + std::log(value) / kappaI, -1.f, 1.f);
         Scalar sinTheta = std::sqrt(1.f - cosTheta * cosTheta);
 
         return Frame(muI).toWorld({
@@ -49,11 +57,9 @@ private:
     }
 
     [[nodiscard]]
-    inline Packet pdf(const Vector3 & w) const {
-        PacketVec3 packetW(w);
-        Packet nu = kappa * std::experimental::exp(kappa * (dot(mu, packetW) - Packet(1)));
-        Packet de = (2.f * M_PI * (1.f - std::experimental::exp(-2.f * kappa)));
-        return nu / de;
+    inline Packet pdf(const Vector3 & v) const {
+        Packet e = std::experimental::exp(kappa * (dot(mu, PacketVec3(v)) - 1.f));
+        return pdfFactor * e;
     }
 };
 
@@ -125,6 +131,8 @@ public:
         for (size_t k = 0; k < NKernels; ++k) {
             kernels[k].alpha = 1.f / NComponents;
             kernels[k].kappa = 5;
+            kernels[k].refreshCache();
+
             meanCosine[k] = 0;
             distances[k] = std::numeric_limits<Scalar>::infinity();
             distanceWeightSums[k] = 0;
@@ -142,6 +150,7 @@ public:
         for (auto iter = begin; iter != end; ++iter) {
             Vector3 origin = iter->position + iter->direction * iter->distance;
             Vector3 po = origin - newPosition;
+            // TODO may be slow?
             Scalar t = po.length();
             if (t > 0) {
                 iter->direction = po / t;
@@ -164,6 +173,7 @@ public:
             set(out.kernels[k].mu, po / t, mask);
             out.kernels[k].alpha = kernels[k].alpha;
             out.kernels[k].kappa = kernels[k].kappa;
+            out.kernels[k].refreshCache();
         }
     }
 
@@ -199,6 +209,7 @@ private:
         }
     }
 
+    // TODO slow
     inline static void set(PacketVec3 & pv1, const PacketVec3 & pv2, const Mask & mask) {
         for (size_t i = 0; i < NScalars; ++i) {
             if (mask[i]) {
@@ -233,6 +244,7 @@ private:
         for (size_t k = 0; k < NKernels; ++k) {
             PacketVec3 origin = packetCurPos + kernels[k].mu * distances[k];
             PacketVec3 po = origin - packetNewPos;
+            // TODO slow?
             Packet t = std::experimental::sqrt(dot(po, po));
             Mask mask = std::experimental::isfinite(distances[k]) && t > 0;
             // update distance, update mu
@@ -281,6 +293,7 @@ private:
             for (auto iter = begin; iter != end; ++iter) {
                 Scalar pdf = 0.f;
                 for (size_t k = 0; k < NKernels; ++k) {
+                    // TODO pdf still slow
                     partialPdfs[k] = kernels[k].alpha * kernels[k].pdf(iter->direction);
                     pdf += std::experimental::reduce(partialPdfs[k], std::plus<>());
                 }
@@ -295,6 +308,7 @@ private:
                     batchGammaWeightSampleSums[k] += gammaIK * weight * PacketVec3(iter->direction);
                 }
 
+                // TODO may be slow?
                 logLikelihood += weight * std::log(pdf);
                 i += 1;
             }
@@ -311,6 +325,7 @@ private:
                 set(kernels[k].mu, gammaWeightSampleSum / rLength, mask);
                 set(meanCosine[k], std::experimental::min(rLength / gammaWeightSum, Packet(0.9999f)), mask);
                 set(kernels[k].kappa, meanCosineToKappa(meanCosine[k]), mask);
+                kernels[k].refreshCache();
             }
 
             if (iteration >= 1) {
