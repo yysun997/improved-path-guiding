@@ -292,6 +292,14 @@ public:
         return m_bsdfs[bsdfIndex]->getRoughness(its, component);
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        Float roughness = 0;
+        for (size_t i = 0; i < m_weights.size(); ++i) {
+            roughness += m_weights[i] * m_bsdfs[i]->getRoughness(its);
+        }
+        return roughness;
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "MixtureBSDF[" << endl

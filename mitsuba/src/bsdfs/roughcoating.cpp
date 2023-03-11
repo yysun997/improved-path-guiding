@@ -461,6 +461,11 @@ public:
             : m_alpha->eval(its).average();
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return m_specularSamplingWeight * m_alpha->eval(its).average() +
+               (1 - m_specularSamplingWeight) * m_nested->getRoughness(its);
+    }
+
     void addChild(const std::string &name, ConfigurableObject *child) {
         if (child->getClass()->derivesFrom(MTS_CLASS(BSDF))) {
             if (m_nested != NULL)

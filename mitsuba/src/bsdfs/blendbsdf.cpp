@@ -269,6 +269,11 @@ public:
         return m_bsdfs[bsdfIndex]->getRoughness(its, component);
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        Float weight = m_weight->eval(its).average();
+        return (1 - weight) * m_bsdfs[0]->getRoughness(its) + weight * m_bsdfs[1]->getRoughness(its);
+    }
+
     void addChild(const std::string &name, ConfigurableObject *child) {
         if (child->getClass()->derivesFrom(MTS_CLASS(BSDF))) {
             BSDF *bsdf = static_cast<BSDF *>(child);

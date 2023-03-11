@@ -333,11 +333,6 @@ public:
         return m_usesRayDifferentials;
     }
 
-    /// Return whether this BSDF uses path guiding technique
-    inline bool usePathGuiding() const {
-        return m_usePathGuiding;
-    }
-
     /// Return the diffuse reflectance value (if any)
     virtual Spectrum getDiffuseReflectance(const Intersection &its) const;
 
@@ -463,6 +458,10 @@ public:
      */
     virtual Float getRoughness(const Intersection &its, int index) const;
 
+    // Get an estimation of the roughness at this intersection
+    // By default, it returns 0
+    virtual Float getRoughness(const Intersection &its) const;
+
     /**
      * \brief Sometimes, BSDF models make use of a perturbed frame for
      * internal shading computations (e.g. bump maps). This function
@@ -545,7 +544,6 @@ protected:
     unsigned int m_combinedType;
     bool m_usesRayDifferentials;
     bool m_ensureEnergyConservation;
-    bool m_usePathGuiding;
 };
 
 MTS_NAMESPACE_END

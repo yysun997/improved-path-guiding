@@ -577,6 +577,11 @@ template <typename T> struct TVector3 {
         return x == 0 && y == 0 && z == 0;
     }
 
+    /// Return whether or not this vector contains nan
+    bool isNaN() const {
+        return std::isnan(x) || std::isnan(y) || std::isnan(z);
+    }
+
     /// Equality test
     bool operator==(const TVector3 &v) const {
         return (v.x == x && v.y == y && v.z == z);

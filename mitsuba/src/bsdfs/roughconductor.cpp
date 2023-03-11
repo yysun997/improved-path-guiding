@@ -436,6 +436,10 @@ public:
             + m_alphaV->eval(its).average());
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return 0.5f * (m_alphaU->eval(its).average() + m_alphaV->eval(its).average());
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "RoughConductor[" << endl

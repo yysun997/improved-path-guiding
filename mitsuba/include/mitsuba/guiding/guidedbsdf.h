@@ -4,69 +4,61 @@
 
 MTS_NAMESPACE_BEGIN
 
+namespace PathGuiding {
+
+// TODO decide sampling fraction based on roughness?
 class GuidedBSDF {
 public:
 
-    inline GuidedBSDF(const BSDF * bsdf, VMM * model, AdamBSDFSamplingFraction * bsdfFractionModel) {
-        this->bsdf = bsdf;
-        this->directionModel = model;
-        this->bsdfFractionModel = bsdfFractionModel;
-    }
+    using VMFMixture = vmm::VMFMixture;
 
-    Spectrum sample(BSDFSamplingRecord & bRec, PGSamplingRecord & pgRec, const Point2 & sample) {
-        pgRec.bsdfSamplingFraction = bsdfFractionModel->bsdfSamplingFraction();
-        if (sample.x < pgRec.bsdfSamplingFraction) {
-            // sample BSDF
-            Spectrum result = bsdf->sample(bRec, pgRec.pdfBSDF, {sample.x / pgRec.bsdfSamplingFraction, sample.y});
+    VMFMixture model;
+    const BSDF * bsdf{};
+
+    Spectrum sample(BSDFSamplingRecord & bRec, Float & pdf, const Point2 & rn) const {
+        Float bsdfSamplingFraction = 0.5;
+        if (rn.x < bsdfSamplingFraction) {
+            // sample the BSDF
+            Float pdfBSDF;
+            Spectrum result = bsdf->sample(bRec, pdfBSDF, {rn.x / bsdfSamplingFraction, rn.y});
             if (result.isZero()) {
                 return result;
             }
-            result *= pgRec.pdfBSDF;
-
-//            assert(!std::isnan(bRec.wo[0]) && !std::isnan(bRec.wo[1]) && !std::isnan(bRec.wo[2]));
+            result *= pdfBSDF;
 
             // one-sample MIS
-            pgRec.direction = bRec.its.toWorld(bRec.wo);
-//            assert(!std::isnan(pgRec.direction[0]) && !std::isnan(pgRec.direction[1]) && !std::isnan(pgRec.direction[2]));
-            Float pdfModel = directionModel->pdf(pgRec.direction);
-            pgRec.pdf = math::mix(pgRec.bsdfSamplingFraction, pdfModel, pgRec.pdfBSDF);
-            return result / pgRec.pdf;
+            Vector3 direction = bRec.its.toWorld(bRec.wo);
+            Float pdfModel = model.pdf(direction);
+            pdf = math::lerp(bsdfSamplingFraction, pdfModel, pdfBSDF);
+            return result / pdf;
         }
 
-        // sample model
-        Float pdfModel;
-        const Point2 reusedSample = {(sample.x - pgRec.bsdfSamplingFraction) / (1 - pgRec.bsdfSamplingFraction), sample.y};
-        pgRec.direction = directionModel->sample(pdfModel, reusedSample);
-        bRec.wo = bRec.its.toLocal(pgRec.direction);
+        // sample the model
+        const Vector2 reusedSample = {(rn.x - bsdfSamplingFraction) / (1 - bsdfSamplingFraction), rn.y};
+        Vector3 direction = model.sample(reusedSample);
+        Float pdfModel = model.pdf(direction);
+        bRec.wo = bRec.its.toLocal(direction);
         Spectrum result = bsdf->eval(bRec);
         if (result.isZero()) {
             return result;
         }
 
         // one-sample MIS
-        pgRec.pdfBSDF = bsdf->pdf(bRec);
-        pgRec.pdf = math::mix(pgRec.bsdfSamplingFraction, pdfModel, pgRec.pdfBSDF);
-        return result / pgRec.pdf;
-    }
-
-    Float pdf(const BSDFSamplingRecord & bRec) {
-        Vector3 wo = bRec.its.toWorld(bRec.wo);
-        if (std::isnan(wo[0]) || std::isnan(wo[1]) || std::isnan(wo[2])) {
-            return 0;
-        }
-
-        Float bsdfSamplingFraction = bsdfFractionModel->bsdfSamplingFraction();
-        Float pdfModel = directionModel->pdf(wo);
         Float pdfBSDF = bsdf->pdf(bRec);
-        return math::mix(bsdfSamplingFraction, pdfModel, pdfBSDF);
+        pdf = math::lerp(bsdfSamplingFraction, pdfModel, pdfBSDF);
+        return result / pdf;
     }
 
-private:
-
-    const BSDF * bsdf;
-    VMM * directionModel;
-    AdamBSDFSamplingFraction * bsdfFractionModel;
-
+    [[nodiscard]]
+    Float pdf(const BSDFSamplingRecord & bRec) const {
+        Float bsdfSamplingFraction = 0.5;
+        Vector3 wo = bRec.its.toWorld(bRec.wo);
+        Float pdfModel = model.pdf(wo);
+        Float pdfBSDF = bsdf->pdf(bRec);
+        return math::lerp(bsdfSamplingFraction, pdfModel, pdfBSDF);
+    }
 };
+
+}
 
 MTS_NAMESPACE_END

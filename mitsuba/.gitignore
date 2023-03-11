@@ -13,6 +13,7 @@ doc/plugins_generated.tex
 .sconf_temp
 build/release
 build/debug
+build/relwithdebinfo
 debian
 .sconsign.dblite
 config.py

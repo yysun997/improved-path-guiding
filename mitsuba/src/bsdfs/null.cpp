@@ -79,6 +79,10 @@ public:
         return 0.0f;
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return 0;
+    }
+
     std::string toString() const {
         return "Null[]";
     }

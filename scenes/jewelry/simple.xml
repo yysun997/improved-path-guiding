@@ -1,12 +1,11 @@
-<?xml version='1.0' encoding='utf-8'?>
-
 <scene version="0.6.0">
-    <default name="spp" value="320"/>
+    <default name="spp" value="64"/>
 
     <integrator type="guidedpath">
-        <integer name="maxDepth" value="64"/>
-        <integer name="rrDepth" value="64"/>
+        <integer name="maxDepth" value="40"/>
+        <integer name="rrDepth" value="40"/>
 
+        <float name="trainingSPPFraction" value="1"/>
         <integer name="sppPerIteration" value="4"/>
         <integer name="maxSampleBufferSize" value="320"/>
     </integrator>

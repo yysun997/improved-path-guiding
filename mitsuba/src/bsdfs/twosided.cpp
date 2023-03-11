@@ -211,6 +211,11 @@ public:
         }
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        bool flipped = Frame::cosTheta(its.wi) < 0;
+        return m_nestedBRDF[flipped]->getRoughness(its);
+    }
+
     Float getEta() const {
         return 1.0f;
     }

@@ -249,6 +249,10 @@ public:
         return m_nested->getRoughness(its, component);
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return m_nested->getRoughness(its);
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "NormalMap[" << endl

@@ -29,7 +29,6 @@ BSDF::BSDF(const Properties &props)
        is completely up to the particular BSDF implementations */
     m_ensureEnergyConservation = props.getBoolean("ensureEnergyConservation", true);
     m_usesRayDifferentials = false;
-    m_usePathGuiding = props.getBoolean("usePathGuiding", true);
 }
 
 BSDF::BSDF(Stream *stream, InstanceManager *manager)
@@ -77,6 +76,10 @@ void BSDF::getFrameDerivative(const Intersection &its, Frame &du, Frame &dv) con
 
 Float BSDF::getRoughness(const Intersection &its, int component) const {
     NotImplementedError("getRoughness");
+}
+
+Float BSDF::getRoughness(const Intersection & its) const {
+    return 0;
 }
 
 Spectrum BSDF::getDiffuseReflectance(const Intersection &its) const {

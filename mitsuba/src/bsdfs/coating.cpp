@@ -380,6 +380,10 @@ public:
             ? m_nested->getRoughness(its, component) : (Float) 0;
     }
 
+    Float getRoughness(const Intersection &its) const override {
+        return (1 - m_specularSamplingWeight) * m_nested->getRoughness(its);
+    }
+
     std::string toString() const {
         std::ostringstream oss;
         oss << "SmoothCoating[" << endl
