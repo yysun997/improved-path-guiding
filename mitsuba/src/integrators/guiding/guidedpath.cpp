@@ -323,9 +323,9 @@ public:
                         if (emitter->isOnSurface() && dRec.measure == ESolidAngle) {
                             if (bInfo.usePathGuiding) {
                                 bsdfPdf = guidedBSDF.pdf(bRec);
-                                if (std::isnan(bsdfPdf)) {
-                                    Log(EWarn, "encountered NaN when evaluating pdf on GuidedBSDF!");
-                                }
+//                                if (std::isnan(bsdfPdf)) {
+//                                    Log(EWarn, "encountered NaN when evaluating pdf on GuidedBSDF!");
+//                                }
                             } else {
                                 bsdfPdf = bsdf->pdf(bRec);
                             }
@@ -353,9 +353,9 @@ public:
             Spectrum bsdfWeight;
             if (bInfo.usePathGuiding) {
                 bsdfWeight = guidedBSDF.sample(bRec, bsdfPdf, rRec.nextSample2D());
-                if (std::isnan(bsdfPdf) || bsdfWeight.isNaN()) {
-                    Log(EWarn, "encountered NaN when sampling GuidedBSDF!");
-                }
+//                if (std::isnan(bsdfPdf) || bsdfWeight.isNaN()) {
+//                    Log(EWarn, "encountered NaN when sampling GuidedBSDF!");
+//                }
             } else {
                 bsdfWeight = bsdf->sample(bRec, bsdfPdf, rRec.nextSample2D());
             }

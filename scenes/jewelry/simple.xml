@@ -1,5 +1,5 @@
 <scene version="0.6.0">
-    <default name="spp" value="16"/>
+    <default name="spp" value="64"/>
 
     <integrator type="guidedpath">
         <integer name="maxDepth" value="40"/>

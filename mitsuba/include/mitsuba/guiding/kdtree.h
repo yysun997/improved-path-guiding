@@ -17,7 +17,7 @@ public:
     Vector3 posMean;
     Vector3 posVar;
     ParallaxAwareVMM * model{};
-    size_t numSamples{};
+    int numSamples{};
 
     inline explicit Region(ParallaxAwareVMM * model) {
         this->model = model;
@@ -136,7 +136,7 @@ private:
             return;
         }
 
-        const size_t maxRegionNumSamples = 32768;
+        const int maxRegionNumSamples = 32768;
 
         if (node->splitAxis < 0) {
             auto region = node->region;
